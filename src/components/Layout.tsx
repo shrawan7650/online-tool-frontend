@@ -1,6 +1,12 @@
-import { ReactNode } from 'react';
+import React,{ ReactNode, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Settings, Github } from 'lucide-react';
+import { Home, Settings, Github, LogIn } from 'lucide-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../store/store';
+import { UserMenu } from './UserMenu';
+import { LoginModal } from './auth/LoginModal';
+import { useState } from 'react';
+
 
 interface LayoutProps {
   children: ReactNode;
@@ -8,18 +14,23 @@ interface LayoutProps {
 
 export function Layout({ children }: LayoutProps) {
   const location = useLocation();
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
+  const { isAuthenticated } = useSelector((state: RootState) => state.user);
+
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
-      <nav className="border-b border-slate-800 bg-slate-950/90 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/90 backdrop-blur-sm">
+        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link 
               to="/" 
-              className="flex items-center space-x-3 text-white hover:text-blue-400 transition-colors"
+              className="flex items-center space-x-3 text-white transition-colors hover:text-blue-400"
               aria-label="Go to home page"
             >
-              <Settings className="h-8 w-8 text-blue-500" />
+              <Settings className="w-8 h-8 text-blue-500" />
               <span className="text-xl font-bold">Online Tools</span>
             </Link>
             
@@ -33,18 +44,30 @@ export function Layout({ children }: LayoutProps) {
                 }`}
                 aria-label="Home"
               >
-                <Home className="h-4 w-4" />
+                <Home className="w-4 h-4" />
                 <span className="hidden sm:inline">Home</span>
               </Link>
+              
+              {/* {isAuthenticated ? (
+                <UserMenu />
+              ) : (
+                <button
+                  onClick={() => setShowLoginModal(true)}
+                  className="flex items-center px-3 py-2 space-x-2 text-white transition-colors bg-blue-600 rounded-lg hover:bg-blue-700"
+                >
+                  <LogIn className="w-4 h-4" />
+                  <span className="hidden sm:inline">Sign In</span>
+                </button>
+              )} */}
               
               <a 
                 href="https://github.com" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-slate-300 hover:text-white transition-colors p-2 rounded-lg hover:bg-slate-800"
+                className="p-2 transition-colors rounded-lg text-slate-300 hover:text-white hover:bg-slate-800"
                 aria-label="View source code on GitHub"
               >
-                <Github className="h-5 w-5" />
+                <Github className="w-5 h-5" />
               </a>
             </div>
           </div>
@@ -55,14 +78,19 @@ export function Layout({ children }: LayoutProps) {
         {children}
       </main>
 
-      <footer className="border-t border-slate-800 bg-slate-950/50 mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <footer className="mt-16 border-t border-slate-800 bg-slate-950/50">
+        <div className="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="text-center text-slate-400">
             <p>&copy; 2024 Online Tools Portal. Built with React & Node.js</p>
-            <p className="text-sm mt-2">Professional developer utilities for everyday tasks</p>
+            <p className="mt-2 text-sm">Professional developer utilities for everyday tasks</p>
           </div>
         </div>
       </footer>
+      
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+      />
     </div>
   );
 }

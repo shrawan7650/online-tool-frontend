@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { Copy, ArrowRight, ArrowLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { GoogleAdSlot } from '../components/GoogleAdSlot';
-
+import React from 'react'; 
 export function URLEncodePage() {
   const [input, setInput] = useState('');
   const [result, setResult] = useState('');
@@ -46,17 +46,17 @@ export function URLEncodePage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">URL Encode/Decode</h1>
-        <p className="text-slate-400 text-lg">
+    <div className="max-w-4xl px-4 py-8 mx-auto sm:px-6 lg:px-8 animate-fade-in">
+      <div className="mb-8 text-center">
+        <h1 className="mb-4 text-3xl font-bold text-white sm:text-4xl">URL Encode/Decode</h1>
+        <p className="text-lg text-slate-400">
           Safely encode URLs for transmission or decode encoded URLs back to readable text
         </p>
       </div>
 
       {/* Mode Toggle */}
       <div className="flex justify-center mb-6">
-        <div className="bg-slate-800 p-1 rounded-lg">
+        <div className="p-1 rounded-lg bg-slate-800">
           <button
             onClick={() => setMode('encode')}
             className={`px-4 py-2 rounded transition-colors ${
@@ -80,15 +80,15 @@ export function URLEncodePage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 gap-6 mb-8 lg:grid-cols-2">
         {/* Input Section */}
         <div className="tool-card">
-          <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+          <h3 className="flex items-center mb-4 text-lg font-semibold text-white">
             Input Text
             {mode === 'encode' ? (
-              <ArrowRight className="h-5 w-5 ml-2 text-blue-500" />
+              <ArrowRight className="w-5 h-5 ml-2 text-blue-500" />
             ) : (
-              <ArrowLeft className="h-5 w-5 ml-2 text-blue-500" />
+              <ArrowLeft className="w-5 h-5 ml-2 text-blue-500" />
             )}
           </h3>
           <form onSubmit={handleProcess} className="space-y-4">
@@ -100,7 +100,7 @@ export function URLEncodePage() {
                 ? 'Enter text to encode (e.g., hello world!)' 
                 : 'Enter URL-encoded text (e.g., hello%20world%21)'
               }
-              className="textarea-field h-32"
+              className="h-32 textarea-field"
               aria-label={`Text to ${mode}`}
             />
             <div className="flex space-x-3">
@@ -125,7 +125,7 @@ export function URLEncodePage() {
 
         {/* Result Section */}
         <div className="tool-card">
-          <h3 className="text-lg font-semibold text-white mb-4">
+          <h3 className="mb-4 text-lg font-semibold text-white">
             Result
           </h3>
           {result ? (
@@ -133,19 +133,19 @@ export function URLEncodePage() {
               <textarea
                 value={result}
                 readOnly
-                className="textarea-field h-32 bg-slate-900"
+                className="h-32 textarea-field bg-slate-900"
                 aria-label="Encoded/decoded result"
               />
               <button
                 onClick={() => handleCopy(result)}
-                className="btn-copy inline-flex items-center space-x-2"
+                className="inline-flex items-center space-x-2 btn-copy"
               >
-                <Copy className="h-4 w-4" />
+                <Copy className="w-4 h-4" />
                 <span>Copy Result</span>
               </button>
             </div>
           ) : (
-            <div className="h-32 bg-slate-900 rounded-lg flex items-center justify-center border-2 border-dashed border-slate-700">
+            <div className="flex items-center justify-center h-32 border-2 border-dashed rounded-lg bg-slate-900 border-slate-700">
               <p className="text-slate-500">Result will appear here</p>
             </div>
           )}
@@ -155,18 +155,18 @@ export function URLEncodePage() {
       <GoogleAdSlot adSlotId="2345678901" />
 
       {/* Info Section */}
-      <div className="tool-card mt-8">
-        <h3 className="text-lg font-semibold text-white mb-4">About URL Encoding</h3>
+      <div className="mt-8 tool-card">
+        <h3 className="mb-4 text-lg font-semibold text-white">About URL Encoding</h3>
         <div className="prose prose-invert max-w-none">
           <p className="text-slate-400">
             URL encoding (also called percent-encoding) is used to encode special characters 
             in URLs to ensure they are transmitted safely over the internet. Characters like 
             spaces, ampersands, and question marks have special meanings in URLs and must be encoded.
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+          <div className="grid grid-cols-1 gap-6 mt-6 md:grid-cols-2">
             <div>
-              <h4 className="text-white font-medium mb-2">Common Encodings:</h4>
-              <ul className="text-slate-400 space-y-1 text-sm">
+              <h4 className="mb-2 font-medium text-white">Common Encodings:</h4>
+              <ul className="space-y-1 text-sm text-slate-400">
                 <li>Space → %20</li>
                 <li>! → %21</li>
                 <li># → %23</li>
@@ -175,8 +175,8 @@ export function URLEncodePage() {
               </ul>
             </div>
             <div>
-              <h4 className="text-white font-medium mb-2">Use Cases:</h4>
-              <ul className="text-slate-400 space-y-1 text-sm">
+              <h4 className="mb-2 font-medium text-white">Use Cases:</h4>
+              <ul className="space-y-1 text-sm text-slate-400">
                 <li>Query parameters</li>
                 <li>Form data submission</li>
                 <li>API endpoint URLs</li>

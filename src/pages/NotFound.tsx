@@ -1,31 +1,31 @@
 import { Link } from 'react-router-dom';
 import { Home, ArrowLeft } from 'lucide-react';
-
+import React from 'react'; 
 export function NotFound() {
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
+    <div className="flex items-center justify-center min-h-screen px-4">
       <div className="text-center">
         <div className="mb-8">
-          <h1 className="text-9xl font-bold text-slate-800 mb-4">404</h1>
-          <h2 className="text-3xl font-bold text-white mb-2">Page Not Found</h2>
-          <p className="text-slate-400 text-lg">
+          <h1 className="mb-4 font-bold text-9xl text-slate-800">404</h1>
+          <h2 className="mb-2 text-3xl font-bold text-white">Page Not Found</h2>
+          <p className="text-lg text-slate-400">
             Sorry, the page you're looking for doesn't exist.
           </p>
         </div>
         
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex flex-col justify-center gap-4 sm:flex-row">
           <Link 
             to="/" 
-            className="btn-primary inline-flex items-center space-x-2"
+            className="inline-flex items-center space-x-2 btn-primary"
           >
-            <Home className="h-5 w-5" />
+            <Home className="w-5 h-5" />
             <span>Go Home</span>
           </Link>
           <button
             onClick={() => window.history.back()}
-            className="btn-secondary inline-flex items-center space-x-2"
+            className="inline-flex items-center space-x-2 btn-secondary"
           >
-            <ArrowLeft className="h-5 w-5" />
+            <ArrowLeft className="w-5 h-5" />
             <span>Go Back</span>
           </button>
         </div>

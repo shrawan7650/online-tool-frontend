@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { Copy, ArrowRight, ArrowLeft, Braces } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { GoogleAdSlot } from '../components/GoogleAdSlot';
-
+import React from 'react'; 
 export function JSONPage() {
   const [input, setInput] = useState('');
   const [result, setResult] = useState('');
@@ -70,17 +70,17 @@ export function JSONPage() {
   }, [input]);
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">JSON Escape/Unescape</h1>
-        <p className="text-slate-400 text-lg">
+    <div className="max-w-4xl px-4 py-8 mx-auto sm:px-6 lg:px-8 animate-fade-in">
+      <div className="mb-8 text-center">
+        <h1 className="mb-4 text-3xl font-bold text-white sm:text-4xl">JSON Escape/Unescape</h1>
+        <p className="text-lg text-slate-400">
           Escape JSON strings for safe embedding or unescape to readable text
         </p>
       </div>
 
       {/* Mode Toggle */}
       <div className="flex justify-center mb-6">
-        <div className="bg-slate-800 p-1 rounded-lg">
+        <div className="p-1 rounded-lg bg-slate-800">
           <button
             onClick={() => setMode('escape')}
             className={`px-4 py-2 rounded transition-colors ${
@@ -104,15 +104,15 @@ export function JSONPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 gap-6 mb-8 lg:grid-cols-2">
         {/* Input Section */}
         <div className="tool-card">
-          <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+          <h3 className="flex items-center mb-4 text-lg font-semibold text-white">
             Input Text
             {mode === 'escape' ? (
-              <ArrowRight className="h-5 w-5 ml-2 text-yellow-500" />
+              <ArrowRight className="w-5 h-5 ml-2 text-yellow-500" />
             ) : (
-              <ArrowLeft className="h-5 w-5 ml-2 text-yellow-500" />
+              <ArrowLeft className="w-5 h-5 ml-2 text-yellow-500" />
             )}
           </h3>
           <form onSubmit={handleProcess} className="space-y-4">
@@ -124,7 +124,7 @@ export function JSONPage() {
                 ? 'Enter text to escape for JSON (e.g., Hello "World"!)' 
                 : 'Enter escaped JSON string (e.g., Hello \\"World\\"!)'
               }
-              className="textarea-field h-32 font-mono"
+              className="h-32 font-mono textarea-field"
               aria-label={`Text to ${mode}`}
             />
             <div className="flex flex-wrap gap-3">
@@ -165,8 +165,8 @@ export function JSONPage() {
 
         {/* Result Section */}
         <div className="tool-card">
-          <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-            <Braces className="h-5 w-5 mr-2 text-yellow-500" />
+          <h3 className="flex items-center mb-4 text-lg font-semibold text-white">
+            <Braces className="w-5 h-5 mr-2 text-yellow-500" />
             Result
           </h3>
           {result ? (
@@ -174,24 +174,24 @@ export function JSONPage() {
               <textarea
                 value={result}
                 readOnly
-                className="textarea-field h-32 bg-slate-900 font-mono text-sm"
+                className="h-32 font-mono text-sm textarea-field bg-slate-900"
                 aria-label="Processed result"
               />
               <div className="flex items-center space-x-3">
                 <button
                   onClick={() => handleCopy(result)}
-                  className="btn-copy inline-flex items-center space-x-2"
+                  className="inline-flex items-center space-x-2 btn-copy"
                 >
-                  <Copy className="h-4 w-4" />
+                  <Copy className="w-4 h-4" />
                   <span>Copy Result</span>
                 </button>
-                <span className="text-slate-500 text-sm">
+                <span className="text-sm text-slate-500">
                   {result.length} characters
                 </span>
               </div>
             </div>
           ) : (
-            <div className="h-32 bg-slate-900 rounded-lg flex items-center justify-center border-2 border-dashed border-slate-700">
+            <div className="flex items-center justify-center h-32 border-2 border-dashed rounded-lg bg-slate-900 border-slate-700">
               <p className="text-slate-500">Result will appear here</p>
             </div>
           )}
@@ -201,18 +201,18 @@ export function JSONPage() {
       <GoogleAdSlot adSlotId="4567890123" />
 
       {/* Info Section */}
-      <div className="tool-card mt-8">
-        <h3 className="text-lg font-semibold text-white mb-4">About JSON Escaping</h3>
+      <div className="mt-8 tool-card">
+        <h3 className="mb-4 text-lg font-semibold text-white">About JSON Escaping</h3>
         <div className="prose prose-invert max-w-none">
-          <p className="text-slate-400 mb-4">
+          <p className="mb-4 text-slate-400">
             JSON escaping is the process of encoding special characters in strings so they 
             can be safely included in JSON data. This prevents parsing errors and ensures 
             data integrity when transmitting or storing JSON.
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div>
-              <h4 className="text-white font-medium mb-2">Characters that need escaping:</h4>
-              <ul className="text-slate-400 space-y-1 text-sm font-mono">
+              <h4 className="mb-2 font-medium text-white">Characters that need escaping:</h4>
+              <ul className="space-y-1 font-mono text-sm text-slate-400">
                 <li>" → \"</li>
                 <li>\ → \\</li>
                 <li>/ → \/ (optional)</li>
@@ -224,8 +224,8 @@ export function JSONPage() {
               </ul>
             </div>
             <div>
-              <h4 className="text-white font-medium mb-2">Use Cases:</h4>
-              <ul className="text-slate-400 space-y-1 text-sm">
+              <h4 className="mb-2 font-medium text-white">Use Cases:</h4>
+              <ul className="space-y-1 text-sm text-slate-400">
                 <li>API request/response bodies</li>
                 <li>Configuration files</li>
                 <li>Database storage</li>
@@ -235,16 +235,16 @@ export function JSONPage() {
               </ul>
             </div>
           </div>
-          <div className="mt-6 p-4 bg-slate-900 rounded-lg">
-            <h4 className="text-white font-medium mb-2">Example:</h4>
-            <div className="space-y-2 text-sm font-mono">
+          <div className="p-4 mt-6 rounded-lg bg-slate-900">
+            <h4 className="mb-2 font-medium text-white">Example:</h4>
+            <div className="space-y-2 font-mono text-sm">
               <div>
                 <span className="text-slate-500">Input:</span>
-                <span className="text-slate-300 ml-2">Hello "World"!</span>
+                <span className="ml-2 text-slate-300">Hello "World"!</span>
               </div>
               <div>
                 <span className="text-slate-500">Escaped:</span>
-                <span className="text-slate-300 ml-2">Hello \"World\"!</span>
+                <span className="ml-2 text-slate-300">Hello \"World\"!</span>
               </div>
             </div>
           </div>
