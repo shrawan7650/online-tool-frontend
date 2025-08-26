@@ -1,12 +1,14 @@
-import { StrictMode } from 'react';
+import React,{ StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
 import { Toaster } from 'react-hot-toast';
 import App from './App.tsx';
 import { ErrorBoundary } from './components/ErrorBoundary.tsx';
 import { PWAInstaller } from './components/PWAInstaller.tsx';
+import { store } from './store/store.ts';
 import './index.css';
-
+import { GoogleOAuthProvider } from "@react-oauth/google";
 // Register service worker
 if ('serviceWorker' in navigator && import.meta.env.PROD) {
   window.addEventListener('load', () => {
@@ -46,21 +48,27 @@ sendPageView(window.location.pathname);
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ErrorBoundary>
-      <BrowserRouter>
-        <App />
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            duration: 4000,
-            style: {
-              background: '#1e293b',
-              color: '#f1f5f9',
-              border: '1px solid #475569'
-            }
-          }}
-        />
-        <PWAInstaller />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+        <GoogleOAuthProvider clientId="58082592124-l79uh1lpb3qqitjfeikqih48jccvi8ei.apps.googleusercontent.com">
+
+          <App />
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: '#1e293b',
+                color: '#f1f5f9',
+                border: '1px solid #475569'
+              }
+            }}
+          />
+          <PWAInstaller />
+          </GoogleOAuthProvider>
+
+        </BrowserRouter>
+      </Provider>
     </ErrorBoundary>
   </StrictMode>
 );

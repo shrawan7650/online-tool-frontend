@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { Copy, Hash as HashIcon, Shield } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { GoogleAdSlot } from '../components/GoogleAdSlot';
-
+import React from 'react'; 
 type HashAlgorithm = 'md5' | 'sha1' | 'sha256' | 'sha512';
 
 export function HashPage() {

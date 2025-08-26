@@ -3,7 +3,7 @@ import { Copy, Download, Clock, Shield, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import { GoogleAdSlot } from '../components/GoogleAdSlot';
-
+import React from 'react'; 
 interface ClipboardResponse {
   code: string;
   ttl: number;
@@ -178,17 +178,17 @@ export function ClipboardPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">Secure Online Clipboard</h1>
-        <p className="text-slate-400 text-lg">
+    <div className="max-w-4xl px-4 py-8 mx-auto sm:px-6 lg:px-8 animate-fade-in">
+      <div className="mb-8 text-center">
+        <h1 className="mb-4 text-3xl font-bold text-white sm:text-4xl">Secure Online Clipboard</h1>
+        <p className="text-lg text-slate-400">
           Share text securely with temporary codes. Data is encrypted and auto-expires.
         </p>
       </div>
 
       {/* Tab Navigation */}
       <div className="flex justify-center mb-8">
-        <div className="bg-slate-800 p-1 rounded-lg">
+        <div className="p-1 rounded-lg bg-slate-800">
           <button
             onClick={() => setActiveTab('create')}
             className={`px-6 py-3 rounded transition-colors ${
@@ -216,10 +216,10 @@ export function ClipboardPage() {
         <div className="space-y-6">
           {!createdClip ? (
             <div className="tool-card">
-              <h3 className="text-lg font-semibold text-white mb-4">Create Secure Note</h3>
+              <h3 className="mb-4 text-lg font-semibold text-white">Create Secure Note</h3>
               <form onSubmit={handleCreate} className="space-y-4">
                 <div>
-                  <label htmlFor="text" className="block text-sm font-medium text-slate-300 mb-2">
+                  <label htmlFor="text" className="block mb-2 text-sm font-medium text-slate-300">
                     Text Content ({text.length.toLocaleString()}/{MAX_CHARS.toLocaleString()})
                   </label>
                   <textarea
@@ -228,17 +228,17 @@ export function ClipboardPage() {
                     onChange={(e) => setText(e.target.value)}
                     maxLength={MAX_CHARS}
                     placeholder="Enter your text here..."
-                    className="textarea-field h-32"
+                    className="h-32 textarea-field"
                     aria-describedby="text-help"
                   />
-                  <p id="text-help" className="text-xs text-slate-500 mt-1">
+                  <p id="text-help" className="mt-1 text-xs text-slate-500">
                     Your text will be encrypted and stored securely
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
-                    <label htmlFor="pin" className="block text-sm font-medium text-slate-300 mb-2">
+                    <label htmlFor="pin" className="block mb-2 text-sm font-medium text-slate-300">
                       PIN (Optional)
                     </label>
                     <div className="relative">
@@ -248,25 +248,25 @@ export function ClipboardPage() {
                         value={pin}
                         onChange={(e) => setPin(e.target.value.replace(/\D/g, '').slice(0, 4))}
                         placeholder="4-digit PIN"
-                        className="input-field pr-10"
+                        className="pr-10 input-field"
                         aria-describedby="pin-help"
                       />
                       <button
                         type="button"
                         onClick={() => setShowPin(!showPin)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+                        className="absolute -translate-y-1/2 right-3 top-1/2 text-slate-400 hover:text-white"
                         aria-label={showPin ? 'Hide PIN' : 'Show PIN'}
                       >
-                        {showPin ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        {showPin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
                     </div>
-                    <p id="pin-help" className="text-xs text-slate-500 mt-1">
+                    <p id="pin-help" className="mt-1 text-xs text-slate-500">
                       Add extra security with a 4-digit PIN
                     </p>
                   </div>
 
                   <div>
-                    <label htmlFor="expiry" className="block text-sm font-medium text-slate-300 mb-2">
+                    <label htmlFor="expiry" className="block mb-2 text-sm font-medium text-slate-300">
                       Expires After
                     </label>
                     <select
@@ -286,7 +286,7 @@ export function ClipboardPage() {
 
                 <button 
                   type="submit" 
-                  className="btn-primary w-full"
+                  className="w-full btn-primary"
                   disabled={loading || !text.trim()}
                 >
                   {loading ? 'Generating...' : 'Generate Secure Code'}
@@ -295,22 +295,22 @@ export function ClipboardPage() {
             </div>
           ) : (
             <div className="tool-card">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-                <Shield className="h-5 w-5 mr-2 text-green-500" />
+              <h3 className="flex items-center mb-4 text-lg font-semibold text-white">
+                <Shield className="w-5 h-5 mr-2 text-green-500" />
                 Note Created Successfully
               </h3>
               <div className="space-y-4">
-                <div className="bg-slate-900 rounded-lg p-4 border-2 border-green-500/30">
+                <div className="p-4 border-2 rounded-lg bg-slate-900 border-green-500/30">
                   <div className="text-center">
-                    <p className="text-slate-300 mb-2">Your secure code is:</p>
-                    <div className="text-3xl font-mono font-bold text-green-400 mb-2">
+                    <p className="mb-2 text-slate-300">Your secure code is:</p>
+                    <div className="mb-2 font-mono text-3xl font-bold text-green-400">
                       {createdClip.code}
                     </div>
                     <button
                       onClick={() => handleCopy(createdClip.code)}
                       className="btn-copy"
                     >
-                      <Copy className="h-4 w-4 mr-2" />
+                      <Copy className="w-4 h-4 mr-2" />
                       Copy Code
                     </button>
                   </div>
@@ -318,7 +318,7 @@ export function ClipboardPage() {
                 
                 <div className="flex items-center justify-center space-x-4 text-sm text-slate-400">
                   <div className="flex items-center">
-                    <Clock className="h-4 w-4 mr-1" />
+                    <Clock className="w-4 h-4 mr-1" />
                     {formatTimeRemaining(createdClip.expiresAt)}
                   </div>
                   <span>•</span>
@@ -333,7 +333,7 @@ export function ClipboardPage() {
 
                 <button
                   onClick={handleNewNote}
-                  className="btn-secondary w-full"
+                  className="w-full btn-secondary"
                 >
                   Create Another Note
                 </button>
@@ -348,11 +348,11 @@ export function ClipboardPage() {
       {activeTab === 'retrieve' && (
         <div className="space-y-6">
           <div className="tool-card">
-            <h3 className="text-lg font-semibold text-white mb-4">Retrieve Note</h3>
+            <h3 className="mb-4 text-lg font-semibold text-white">Retrieve Note</h3>
             <form onSubmit={handleRetrieve} className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                  <label htmlFor="retrieve-code" className="block text-sm font-medium text-slate-300 mb-2">
+                  <label htmlFor="retrieve-code" className="block mb-2 text-sm font-medium text-slate-300">
                     6-Digit Code
                   </label>
                   <input
@@ -361,13 +361,13 @@ export function ClipboardPage() {
                     value={retrieveCode}
                     onChange={(e) => setRetrieveCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                     placeholder="000000"
-                    className="input-field font-mono text-lg text-center"
+                    className="font-mono text-lg text-center input-field"
                     maxLength={6}
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="retrieve-pin" className="block text-sm font-medium text-slate-300 mb-2">
+                  <label htmlFor="retrieve-pin" className="block mb-2 text-sm font-medium text-slate-300">
                     PIN (If Set)
                   </label>
                   <div className="relative">
@@ -377,15 +377,15 @@ export function ClipboardPage() {
                       value={retrievePin}
                       onChange={(e) => setRetrievePin(e.target.value.replace(/\D/g, '').slice(0, 4))}
                       placeholder="Optional 4-digit PIN"
-                      className="input-field pr-10"
+                      className="pr-10 input-field"
                     />
                     <button
                       type="button"
                       onClick={() => setShowRetrievePin(!showRetrievePin)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+                      className="absolute -translate-y-1/2 right-3 top-1/2 text-slate-400 hover:text-white"
                       aria-label={showRetrievePin ? 'Hide PIN' : 'Show PIN'}
                     >
-                      {showRetrievePin ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      {showRetrievePin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
                 </div>
@@ -393,7 +393,7 @@ export function ClipboardPage() {
 
               <button 
                 type="submit" 
-                className="btn-primary w-full"
+                className="w-full btn-primary"
                 disabled={loading || retrieveCode.length !== 6}
               >
                 {loading ? 'Retrieving...' : 'Fetch Note'}
@@ -403,27 +403,27 @@ export function ClipboardPage() {
 
           {retrievedText && (
             <div className="tool-card">
-              <h3 className="text-lg font-semibold text-white mb-4">Retrieved Note</h3>
+              <h3 className="mb-4 text-lg font-semibold text-white">Retrieved Note</h3>
               <div className="space-y-4">
                 <textarea
                   value={retrievedText.text}
                   readOnly
-                  className="textarea-field h-32 bg-slate-900"
+                  className="h-32 textarea-field bg-slate-900"
                 />
                 
                 <div className="flex flex-wrap gap-3">
                   <button
                     onClick={() => handleCopy(retrievedText.text)}
-                    className="btn-copy inline-flex items-center space-x-2"
+                    className="inline-flex items-center space-x-2 btn-copy"
                   >
-                    <Copy className="h-4 w-4" />
+                    <Copy className="w-4 h-4" />
                     <span>Copy Text</span>
                   </button>
                   <button
                     onClick={() => handleDownload(retrievedText.text)}
-                    className="btn-secondary inline-flex items-center space-x-2"
+                    className="inline-flex items-center space-x-2 btn-secondary"
                   >
-                    <Download className="h-4 w-4" />
+                    <Download className="w-4 h-4" />
                     <span>Download</span>
                   </button>
                 </div>
@@ -442,15 +442,15 @@ export function ClipboardPage() {
       )}
 
       {/* Security Info */}
-      <div className="tool-card mt-8">
-        <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-          <Shield className="h-5 w-5 mr-2 text-blue-500" />
+      <div className="mt-8 tool-card">
+        <h3 className="flex items-center mb-4 text-lg font-semibold text-white">
+          <Shield className="w-5 h-5 mr-2 text-blue-500" />
           Security Features
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+        <div className="grid grid-cols-1 gap-6 text-sm md:grid-cols-2">
           <div>
-            <h4 className="text-white font-medium mb-2">Encryption & Privacy:</h4>
-            <ul className="text-slate-400 space-y-1">
+            <h4 className="mb-2 font-medium text-white">Encryption & Privacy:</h4>
+            <ul className="space-y-1 text-slate-400">
               <li>✓ AES-256-GCM encryption</li>
               <li>✓ Server-side encryption at rest</li>
               <li>✓ No logs of content stored</li>
@@ -458,8 +458,8 @@ export function ClipboardPage() {
             </ul>
           </div>
           <div>
-            <h4 className="text-white font-medium mb-2">Access Control:</h4>
-            <ul className="text-slate-400 space-y-1">
+            <h4 className="mb-2 font-medium text-white">Access Control:</h4>
+            <ul className="space-y-1 text-slate-400">
               <li>✓ Limited read attempts (max 3)</li>
               <li>✓ Optional PIN protection</li>
               <li>✓ Rate limiting on retrieval</li>

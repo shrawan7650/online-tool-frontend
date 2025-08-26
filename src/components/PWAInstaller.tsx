@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Download, X } from 'lucide-react';
-
+import React from 'react'; 
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
@@ -46,11 +46,11 @@ export function PWAInstaller() {
   if (!showInstallPrompt) return null;
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-4 sm:w-80 bg-slate-900 border border-slate-700 rounded-lg shadow-xl z-50 animate-slide-up">
+    <div className="fixed z-50 border rounded-lg shadow-xl bottom-4 left-4 right-4 sm:left-auto sm:right-4 sm:w-80 bg-slate-900 border-slate-700 animate-slide-up">
       <div className="p-4">
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center space-x-2">
-            <Download className="h-5 w-5 text-blue-500" />
+            <Download className="w-5 h-5 text-blue-500" />
             <h3 className="font-semibold text-white">Install App</h3>
           </div>
           <button
@@ -58,22 +58,22 @@ export function PWAInstaller() {
             className="text-slate-400 hover:text-white"
             aria-label="Dismiss install prompt"
           >
-            <X className="h-5 w-5" />
+            <X className="w-5 h-5" />
           </button>
         </div>
-        <p className="text-slate-400 text-sm mb-4">
+        <p className="mb-4 text-sm text-slate-400">
           Install Online Tools for quick access and offline functionality.
         </p>
         <div className="flex space-x-3">
           <button
             onClick={handleInstall}
-            className="btn-primary text-sm flex-1"
+            className="flex-1 text-sm btn-primary"
           >
             Install
           </button>
           <button
             onClick={handleDismiss}
-            className="btn-secondary text-sm"
+            className="text-sm btn-secondary"
           >
             Not now
           </button>
