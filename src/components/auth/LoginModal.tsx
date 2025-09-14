@@ -1,16 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { X, Chrome, AlertCircle, Loader2 } from 'lucide-react';
-import { useDispatch, useSelector } from 'react-redux';
-import { loginWithGoogle, clearError } from '../../store/slices/userSlice';
-import { RootState, AppDispatch } from '../../store/store';
-import toast from 'react-hot-toast';
-import { GoogleButtonSignup } from './googleLoginOrSignup';
+import React, { useState, useEffect } from "react";
+import { X, Chrome, AlertCircle, Loader2 } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { loginWithGoogle, clearError, setShowLoginModal } from "../../store/slices/userSlice";
+import { RootState, AppDispatch } from "../../store/store";
+import toast from "react-hot-toast";
+import { GoogleButtonSignup } from "./googleLoginOrSignup";
 
-interface LoginModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSuccess?: () => void;
-}
+
 
 declare global {
   interface Window {
@@ -18,12 +14,11 @@ declare global {
   }
 }
 
-export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
+export function LoginModal() {
+  const dispatch= useDispatch();
+  const { error, isLoading,showLoginModal } = useSelector((state: RootState) => state.user);
 
-  const { error, isLoading } = useSelector((state: RootState) => state.user);
-
-
-  if (!isOpen) return null;
+  if (!showLoginModal) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
@@ -32,7 +27,7 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
         <div className="flex items-center justify-between p-6 border-b border-slate-700">
           <h2 className="text-xl font-semibold text-white">Sign In</h2>
           <button
-            onClick={onClose}
+            onClick={() => dispatch(setShowLoginModal(false))}
             className="transition-colors text-slate-400 hover:text-white"
             aria-label="Close modal"
           >
@@ -47,7 +42,8 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
               Welcome to Online Tools
             </h3>
             <p className="text-sm text-slate-400">
-              Sign in with your Google account to access Pro features and sync your data across devices.
+              Sign in with your Google account to access Pro features and sync
+              your data across devices.
             </p>
           </div>
 
@@ -60,12 +56,13 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
           )}
 
           {/* Google Login Button */}
-         <GoogleButtonSignup onClose={onClose}/>
+          <GoogleButtonSignup  />
 
           {/* Footer */}
           <div className="mt-6 text-center">
             <p className="text-xs text-slate-400">
-              By signing in, you agree to our Terms of Service and Privacy Policy.
+              By signing in, you agree to our Terms of Service and Privacy
+              Policy.
             </p>
           </div>
         </div>

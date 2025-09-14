@@ -1,250 +1,275 @@
-import React,{ useState, useCallback, useEffect } from 'react';
-import { Copy, Code, ArrowRight, ArrowLeft } from 'lucide-react';
-import toast from 'react-hot-toast';
-import { GoogleAdSlot } from '../components/GoogleAdSlot';
+import React, { useState, useCallback, useEffect } from "react";
+import { Copy, Code, ArrowRight, ArrowLeft } from "lucide-react";
+import toast from "react-hot-toast";
+import { GoogleAdSlot } from "../components/GoogleAdSlot";
+import { SEOHead } from "../components/SEOHead";
 
-type Language = 'python' | 'javascript' | 'java' | 'cpp' | 'php' | 'go' | 'ruby' | 'json';
+type Language =
+  | "python"
+  | "javascript"
+  | "java"
+  | "cpp"
+  | "php"
+  | "go"
+  | "ruby"
+  | "json";
 
 interface EscapeRule {
   from: string | RegExp;
   to: string;
 }
 
-const LANGUAGE_CONFIGS: Record<Language, {
-  label: string;
-  escapeRules: EscapeRule[];
-  unescapeRules: EscapeRule[];
-  example: string;
-}> = {
+const LANGUAGE_CONFIGS: Record<
+  Language,
+  {
+    label: string;
+    escapeRules: EscapeRule[];
+    unescapeRules: EscapeRule[];
+    example: string;
+  }
+> = {
   python: {
-    label: 'Python',
+    label: "Python",
     escapeRules: [
-      { from: /\\/g, to: '\\\\' },
+      { from: /\\/g, to: "\\\\" },
       { from: /'/g, to: "\\'" },
       { from: /"/g, to: '\\"' },
-      { from: /\n/g, to: '\\n' },
-      { from: /\r/g, to: '\\r' },
-      { from: /\t/g, to: '\\t' }
+      { from: /\n/g, to: "\\n" },
+      { from: /\r/g, to: "\\r" },
+      { from: /\t/g, to: "\\t" },
     ],
     unescapeRules: [
-      { from: /\\n/g, to: '\n' },
-      { from: /\\r/g, to: '\r' },
-      { from: /\\t/g, to: '\t' },
+      { from: /\\n/g, to: "\n" },
+      { from: /\\r/g, to: "\r" },
+      { from: /\\t/g, to: "\t" },
       { from: /\\"/g, to: '"' },
       { from: /\\'/g, to: "'" },
-      { from: /\\\\/g, to: '\\' }
+      { from: /\\\\/g, to: "\\" },
     ],
-    example: 'Hello "World"!\nNew line'
+    example: 'Hello "World"!\nNew line',
   },
   javascript: {
-    label: 'JavaScript',
+    label: "JavaScript",
     escapeRules: [
-      { from: /\\/g, to: '\\\\' },
+      { from: /\\/g, to: "\\\\" },
       { from: /'/g, to: "\\'" },
       { from: /"/g, to: '\\"' },
-      { from: /`/g, to: '\\`' },
-      { from: /\n/g, to: '\\n' },
-      { from: /\r/g, to: '\\r' },
-      { from: /\t/g, to: '\\t' }
+      { from: /`/g, to: "\\`" },
+      { from: /\n/g, to: "\\n" },
+      { from: /\r/g, to: "\\r" },
+      { from: /\t/g, to: "\\t" },
     ],
     unescapeRules: [
-      { from: /\\n/g, to: '\n' },
-      { from: /\\r/g, to: '\r' },
-      { from: /\\t/g, to: '\t' },
-      { from: /\\`/g, to: '`' },
+      { from: /\\n/g, to: "\n" },
+      { from: /\\r/g, to: "\r" },
+      { from: /\\t/g, to: "\t" },
+      { from: /\\`/g, to: "`" },
       { from: /\\"/g, to: '"' },
       { from: /\\'/g, to: "'" },
-      { from: /\\\\/g, to: '\\' }
+      { from: /\\\\/g, to: "\\" },
     ],
-    example: 'console.log("Hello World!");'
+    example: 'console.log("Hello World!");',
   },
   java: {
-    label: 'Java',
+    label: "Java",
     escapeRules: [
-      { from: /\\/g, to: '\\\\' },
+      { from: /\\/g, to: "\\\\" },
       { from: /"/g, to: '\\"' },
-      { from: /\n/g, to: '\\n' },
-      { from: /\r/g, to: '\\r' },
-      { from: /\t/g, to: '\\t' },
-      { from: /\f/g, to: '\\f' },
-      { from: /\b/g, to: '\\b' }
+      { from: /\n/g, to: "\\n" },
+      { from: /\r/g, to: "\\r" },
+      { from: /\t/g, to: "\\t" },
+      { from: /\f/g, to: "\\f" },
+      { from: /\b/g, to: "\\b" },
     ],
     unescapeRules: [
-      { from: /\\n/g, to: '\n' },
-      { from: /\\r/g, to: '\r' },
-      { from: /\\t/g, to: '\t' },
-      { from: /\\f/g, to: '\f' },
-      { from: /\\b/g, to: '\b' },
+      { from: /\\n/g, to: "\n" },
+      { from: /\\r/g, to: "\r" },
+      { from: /\\t/g, to: "\t" },
+      { from: /\\f/g, to: "\f" },
+      { from: /\\b/g, to: "\b" },
       { from: /\\"/g, to: '"' },
-      { from: /\\\\/g, to: '\\' }
+      { from: /\\\\/g, to: "\\" },
     ],
-    example: 'System.out.println("Hello World!");'
+    example: 'System.out.println("Hello World!");',
   },
   cpp: {
-    label: 'C++',
+    label: "C++",
     escapeRules: [
-      { from: /\\/g, to: '\\\\' },
+      { from: /\\/g, to: "\\\\" },
       { from: /"/g, to: '\\"' },
-      { from: /\n/g, to: '\\n' },
-      { from: /\r/g, to: '\\r' },
-      { from: /\t/g, to: '\\t' },
-      { from: /\0/g, to: '\\0' }
+      { from: /\n/g, to: "\\n" },
+      { from: /\r/g, to: "\\r" },
+      { from: /\t/g, to: "\\t" },
+      { from: /\0/g, to: "\\0" },
     ],
     unescapeRules: [
-      { from: /\\n/g, to: '\n' },
-      { from: /\\r/g, to: '\r' },
-      { from: /\\t/g, to: '\t' },
-      { from: /\\0/g, to: '\0' },
+      { from: /\\n/g, to: "\n" },
+      { from: /\\r/g, to: "\r" },
+      { from: /\\t/g, to: "\t" },
+      { from: /\\0/g, to: "\0" },
       { from: /\\"/g, to: '"' },
-      { from: /\\\\/g, to: '\\' }
+      { from: /\\\\/g, to: "\\" },
     ],
-    example: 'std::cout << "Hello World!" << std::endl;'
+    example: 'std::cout << "Hello World!" << std::endl;',
   },
   php: {
-    label: 'PHP',
+    label: "PHP",
     escapeRules: [
-      { from: /\\/g, to: '\\\\' },
+      { from: /\\/g, to: "\\\\" },
       { from: /'/g, to: "\\'" },
       { from: /"/g, to: '\\"' },
-      { from: /\$/g, to: '\\$' },
-      { from: /\n/g, to: '\\n' },
-      { from: /\r/g, to: '\\r' },
-      { from: /\t/g, to: '\\t' }
+      { from: /\$/g, to: "\\$" },
+      { from: /\n/g, to: "\\n" },
+      { from: /\r/g, to: "\\r" },
+      { from: /\t/g, to: "\\t" },
     ],
     unescapeRules: [
-      { from: /\\n/g, to: '\n' },
-      { from: /\\r/g, to: '\r' },
-      { from: /\\t/g, to: '\t' },
-      { from: /\\\$/g, to: '$' },
+      { from: /\\n/g, to: "\n" },
+      { from: /\\r/g, to: "\r" },
+      { from: /\\t/g, to: "\t" },
+      { from: /\\\$/g, to: "$" },
       { from: /\\"/g, to: '"' },
       { from: /\\'/g, to: "'" },
-      { from: /\\\\/g, to: '\\' }
+      { from: /\\\\/g, to: "\\" },
     ],
-    example: 'echo "Hello $name!";'
+    example: 'echo "Hello $name!";',
   },
   go: {
-    label: 'Go',
+    label: "Go",
     escapeRules: [
-      { from: /\\/g, to: '\\\\' },
+      { from: /\\/g, to: "\\\\" },
       { from: /"/g, to: '\\"' },
-      { from: /`/g, to: '\\`' },
-      { from: /\n/g, to: '\\n' },
-      { from: /\r/g, to: '\\r' },
-      { from: /\t/g, to: '\\t' }
+      { from: /`/g, to: "\\`" },
+      { from: /\n/g, to: "\\n" },
+      { from: /\r/g, to: "\\r" },
+      { from: /\t/g, to: "\\t" },
     ],
     unescapeRules: [
-      { from: /\\n/g, to: '\n' },
-      { from: /\\r/g, to: '\r' },
-      { from: /\\t/g, to: '\t' },
-      { from: /\\`/g, to: '`' },
+      { from: /\\n/g, to: "\n" },
+      { from: /\\r/g, to: "\r" },
+      { from: /\\t/g, to: "\t" },
+      { from: /\\`/g, to: "`" },
       { from: /\\"/g, to: '"' },
-      { from: /\\\\/g, to: '\\' }
+      { from: /\\\\/g, to: "\\" },
     ],
-    example: 'fmt.Println("Hello World!")'
+    example: 'fmt.Println("Hello World!")',
   },
   ruby: {
-    label: 'Ruby',
+    label: "Ruby",
     escapeRules: [
-      { from: /\\/g, to: '\\\\' },
+      { from: /\\/g, to: "\\\\" },
       { from: /'/g, to: "\\'" },
       { from: /"/g, to: '\\"' },
-      { from: /#/g, to: '\\#' },
-      { from: /\n/g, to: '\\n' },
-      { from: /\r/g, to: '\\r' },
-      { from: /\t/g, to: '\\t' }
+      { from: /#/g, to: "\\#" },
+      { from: /\n/g, to: "\\n" },
+      { from: /\r/g, to: "\\r" },
+      { from: /\t/g, to: "\\t" },
     ],
     unescapeRules: [
-      { from: /\\n/g, to: '\n' },
-      { from: /\\r/g, to: '\r' },
-      { from: /\\t/g, to: '\t' },
-      { from: /\\#/g, to: '#' },
+      { from: /\\n/g, to: "\n" },
+      { from: /\\r/g, to: "\r" },
+      { from: /\\t/g, to: "\t" },
+      { from: /\\#/g, to: "#" },
       { from: /\\"/g, to: '"' },
       { from: /\\'/g, to: "'" },
-      { from: /\\\\/g, to: '\\' }
+      { from: /\\\\/g, to: "\\" },
     ],
-    example: 'puts "Hello #{name}!"'
+    example: 'puts "Hello #{name}!"',
   },
   json: {
-    label: 'JSON',
+    label: "JSON",
     escapeRules: [
-      { from: /\\/g, to: '\\\\' },
+      { from: /\\/g, to: "\\\\" },
       { from: /"/g, to: '\\"' },
-      { from: /\n/g, to: '\\n' },
-      { from: /\r/g, to: '\\r' },
-      { from: /\t/g, to: '\\t' },
-      { from: /\f/g, to: '\\f' },
-      { from: /\b/g, to: '\\b' }
+      { from: /\n/g, to: "\\n" },
+      { from: /\r/g, to: "\\r" },
+      { from: /\t/g, to: "\\t" },
+      { from: /\f/g, to: "\\f" },
+      { from: /\b/g, to: "\\b" },
     ],
     unescapeRules: [
-      { from: /\\n/g, to: '\n' },
-      { from: /\\r/g, to: '\r' },
-      { from: /\\t/g, to: '\t' },
-      { from: /\\f/g, to: '\f' },
-      { from: /\\b/g, to: '\b' },
+      { from: /\\n/g, to: "\n" },
+      { from: /\\r/g, to: "\r" },
+      { from: /\\t/g, to: "\t" },
+      { from: /\\f/g, to: "\f" },
+      { from: /\\b/g, to: "\b" },
       { from: /\\"/g, to: '"' },
-      { from: /\\\\/g, to: '\\' }
+      { from: /\\\\/g, to: "\\" },
     ],
-    example: '{"message": "Hello World!", "newline": "Line 1\\nLine 2"}'
-  }
+    example: '{"message": "Hello World!", "newline": "Line 1\\nLine 2"}',
+  },
 };
 
 export function EscapeToolkitPage() {
-  const [input, setInput] = useState('');
-  const [result, setResult] = useState('');
-  const [language, setLanguage] = useState<Language>('javascript');
-  const [mode, setMode] = useState<'escape' | 'unescape'>('escape');
+  const [input, setInput] = useState("");
+  const [result, setResult] = useState("");
+  const [language, setLanguage] = useState<Language>("javascript");
+  const [mode, setMode] = useState<"escape" | "unescape">("escape");
 
   // Listen for clipboard paste events
   useEffect(() => {
     const handleClipboardPaste = (event: CustomEvent) => {
       setInput(event.detail.text);
-      toast.success('Clipboard content pasted!');
+      toast.success("Clipboard content pasted!");
     };
 
-    window.addEventListener('clipboard-paste', handleClipboardPaste as EventListener);
+    window.addEventListener(
+      "clipboard-paste",
+      handleClipboardPaste as EventListener,
+    );
     return () => {
-      window.removeEventListener('clipboard-paste', handleClipboardPaste as EventListener);
+      window.removeEventListener(
+        "clipboard-paste",
+        handleClipboardPaste as EventListener,
+      );
     };
   }, []);
 
-  const applyRules = useCallback((text: string, rules: EscapeRule[]): string => {
-    return rules.reduce((acc, rule) => {
-      return acc.replace(rule.from, rule.to);
-    }, text);
-  }, []);
+  const applyRules = useCallback(
+    (text: string, rules: EscapeRule[]): string => {
+      return rules.reduce((acc, rule) => {
+        return acc.replace(rule.from, rule.to);
+      }, text);
+    },
+    [],
+  );
 
-  const handleProcess = useCallback((e?: React.FormEvent) => {
-    e?.preventDefault();
-    
-    if (!input.trim()) {
-      toast.error('Please enter some text');
-      return;
-    }
+  const handleProcess = useCallback(
+    (e?: React.FormEvent) => {
+      e?.preventDefault();
 
-    try {
-      const config = LANGUAGE_CONFIGS[language];
-      const rules = mode === 'escape' ? config.escapeRules : config.unescapeRules;
-      const processed = applyRules(input, rules);
-      
-      setResult(processed);
-      toast.success(`Text ${mode}d for ${config.label} successfully`);
-    } catch (error) {
-      toast.error(`Error ${mode}ing text`);
-      setResult('');
-    }
-  }, [input, language, mode, applyRules]);
+      if (!input.trim()) {
+        toast.error("Please enter some text");
+        return;
+      }
+
+      try {
+        const config = LANGUAGE_CONFIGS[language];
+        const rules =
+          mode === "escape" ? config.escapeRules : config.unescapeRules;
+        const processed = applyRules(input, rules);
+
+        setResult(processed);
+        toast.success(`Text ${mode}d for ${config.label} successfully`);
+      } catch (error) {
+        toast.error(`Error ${mode}ing text`);
+        setResult("");
+      }
+    },
+    [input, language, mode, applyRules],
+  );
 
   const handleCopy = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      toast.success('Copied to clipboard');
+      toast.success("Copied to clipboard");
     } catch {
-      toast.error('Failed to copy');
+      toast.error("Failed to copy");
     }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
       handleProcess();
     }
   };
@@ -252,13 +277,21 @@ export function EscapeToolkitPage() {
   const loadExample = () => {
     const config = LANGUAGE_CONFIGS[language];
     setInput(config.example);
-    setResult('');
+    setResult("");
   };
 
   return (
     <div className="max-w-4xl px-4 py-8 mx-auto sm:px-6 lg:px-8 animate-fade-in">
+           <SEOHead
+        title="String Escape Toolkit - Multi-Language String Escaping"
+        description="Escape and unescape strings for multiple programming languages including Python, JavaScript, Java, C++, PHP, Go, Ruby, and JSON."
+        keywords="string escape, string unescape, programming languages, Python escape, JavaScript escape, JSON escape"
+        canonicalUrl="/escape-toolkit"
+      />
       <div className="mb-8 text-center">
-        <h1 className="mb-4 text-3xl font-bold text-white sm:text-4xl">Escape Toolkit</h1>
+        <h1 className="mb-4 text-3xl font-bold text-white sm:text-4xl">
+          Escape Toolkit
+        </h1>
         <p className="text-lg text-slate-400">
           String escape/unescape for multiple programming languages
         </p>
@@ -269,7 +302,10 @@ export function EscapeToolkitPage() {
         <h3 className="mb-4 text-lg font-semibold text-white">Configuration</h3>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label htmlFor="language" className="block mb-2 text-sm font-medium text-slate-300">
+            <label
+              htmlFor="language"
+              className="block mb-2 text-sm font-medium text-slate-300"
+            >
               Programming Language
             </label>
             <select
@@ -291,21 +327,21 @@ export function EscapeToolkitPage() {
             </label>
             <div className="p-1 rounded-lg bg-slate-800">
               <button
-                onClick={() => setMode('escape')}
+                onClick={() => setMode("escape")}
                 className={`px-4 py-2 rounded transition-colors ${
-                  mode === 'escape' 
-                    ? 'bg-blue-600 text-white' 
-                    : 'text-slate-400 hover:text-white'
+                  mode === "escape"
+                    ? "bg-blue-600 text-white"
+                    : "text-slate-400 hover:text-white"
                 }`}
               >
                 Escape
               </button>
               <button
-                onClick={() => setMode('unescape')}
+                onClick={() => setMode("unescape")}
                 className={`px-4 py-2 rounded transition-colors ${
-                  mode === 'unescape' 
-                    ? 'bg-blue-600 text-white' 
-                    : 'text-slate-400 hover:text-white'
+                  mode === "unescape"
+                    ? "bg-blue-600 text-white"
+                    : "text-slate-400 hover:text-white"
                 }`}
               >
                 Unescape
@@ -320,7 +356,7 @@ export function EscapeToolkitPage() {
         <div className="tool-card">
           <h3 className="flex items-center mb-4 text-lg font-semibold text-white">
             Input Text
-            {mode === 'escape' ? (
+            {mode === "escape" ? (
               <ArrowRight className="w-5 h-5 ml-2 text-cyan-500" />
             ) : (
               <ArrowLeft className="w-5 h-5 ml-2 text-cyan-500" />
@@ -331,20 +367,21 @@ export function EscapeToolkitPage() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyPress}
-              placeholder={mode === 'escape' 
-                ? `Enter text to escape for ${LANGUAGE_CONFIGS[language].label}` 
-                : `Enter escaped ${LANGUAGE_CONFIGS[language].label} string`
+              placeholder={
+                mode === "escape"
+                  ? `Enter text to escape for ${LANGUAGE_CONFIGS[language].label}`
+                  : `Enter escaped ${LANGUAGE_CONFIGS[language].label} string`
               }
               className="h-32 font-mono textarea-field"
               aria-label={`Text to ${mode}`}
             />
             <div className="flex flex-wrap gap-3">
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 className="btn-primary"
                 disabled={!input.trim()}
               >
-                {mode === 'escape' ? 'Escape String' : 'Unescape String'}
+                {mode === "escape" ? "Escape String" : "Unescape String"}
               </button>
               <button
                 type="button"
@@ -355,7 +392,7 @@ export function EscapeToolkitPage() {
               </button>
               <button
                 type="button"
-                onClick={() => setInput('')}
+                onClick={() => setInput("")}
                 className="btn-secondary"
                 disabled={!input}
               >
@@ -409,12 +446,15 @@ export function EscapeToolkitPage() {
         </h3>
         <div className="prose prose-invert max-w-none">
           <p className="mb-4 text-slate-400">
-            String escaping for {LANGUAGE_CONFIGS[language].label} ensures special characters 
-            are properly encoded for use in string literals and prevents syntax errors.
+            String escaping for {LANGUAGE_CONFIGS[language].label} ensures
+            special characters are properly encoded for use in string literals
+            and prevents syntax errors.
           </p>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div>
-              <h4 className="mb-2 font-medium text-white">Common Escape Sequences:</h4>
+              <h4 className="mb-2 font-medium text-white">
+                Common Escape Sequences:
+              </h4>
               <ul className="space-y-1 font-mono text-sm text-slate-400">
                 <li>\\ → \\\\ (backslash)</li>
                 <li>" → \\" (double quote)</li>

@@ -12,6 +12,7 @@ import {
 import toast from "react-hot-toast";
 import axios from "axios";
 import { GoogleAdSlot } from "../components/GoogleAdSlot";
+import { SEOHead } from "../components/SEOHead";
 
 interface UploadResponse {
   code: string;
@@ -46,7 +47,7 @@ export function FileSharingPage() {
   const [loading, setLoading] = useState(false);
   const [uploadResult, setUploadResult] = useState<UploadResponse | null>(null);
   const [retrieveResult, setRetrieveResult] = useState<RetrieveResponse | null>(
-    null
+    null,
   );
   const [previewFile, setPreviewFile] = useState<File | null>(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
@@ -88,7 +89,7 @@ export function FileSharingPage() {
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
-        }
+        },
       );
 
       setUploadResult(response.data);
@@ -105,7 +106,7 @@ export function FileSharingPage() {
       }
     } catch (error) {
       toast.error(
-        error.response?.data?.error?.message || "Failed to upload files"
+        error.response?.data?.error?.message || "Failed to upload files",
       );
     } finally {
       setLoading(false);
@@ -129,7 +130,7 @@ export function FileSharingPage() {
         `${apiBaseUrl}/api/files/retrieve`,
         {
           code: retrieveCode,
-        }
+        },
       );
 
       setRetrieveResult(response.data);
@@ -215,6 +216,12 @@ export function FileSharingPage() {
 
   return (
     <div className="max-w-4xl px-4 py-8 mx-auto sm:px-6 lg:px-8 animate-fade-in">
+          <SEOHead
+        title="File Sharing Online - Upload & Share Files with Expiry"
+        description="Upload and share files securely with automatic expiry. Supports images, documents, videos up to 50MB. Get shareable codes with preview support."
+        keywords="file sharing, upload files, share files online, temporary file sharing, file upload, secure file sharing"
+        canonicalUrl="/file-sharing"
+      />
       <div className="mb-8 text-center">
         <h1 className="mb-4 text-3xl font-bold text-white sm:text-4xl">
           File Sharing
@@ -471,7 +478,7 @@ export function FileSharingPage() {
                   value={retrieveCode}
                   onChange={(e) =>
                     setRetrieveCode(
-                      e.target.value.replace(/\D/g, "").slice(0, 6)
+                      e.target.value.replace(/\D/g, "").slice(0, 6),
                     )
                   }
                   placeholder="000000"
@@ -530,7 +537,7 @@ export function FileSharingPage() {
                       onClick={() =>
                         handleDirectDownload(
                           retrieveResult.url,
-                          retrieveResult.filename
+                          retrieveResult.filename,
                         )
                       }
                       className="inline-flex items-center space-x-2 btn-primary"
@@ -562,8 +569,7 @@ export function FileSharingPage() {
             <ul className="space-y-1 text-slate-400">
               <li>✓ Auto-delete after 5 minutes if retrieved</li>
               <li>✓ Configurable expiry (5m to 7 days)</li>
-              
-            
+
               <li>✓ Preview support for images and PDFs</li>
             </ul>
           </div>

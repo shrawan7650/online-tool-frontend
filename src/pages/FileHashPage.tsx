@@ -1,10 +1,11 @@
-import React,{ useState, useCallback } from 'react';
-import { useDropzone } from 'react-dropzone';
-import { Upload, FileCheck, Copy, Hash, AlertCircle } from 'lucide-react';
-import toast from 'react-hot-toast';
-import { GoogleAdSlot } from '../components/GoogleAdSlot';
+import React, { useState, useCallback } from "react";
+import { useDropzone } from "react-dropzone";
+import { Upload, FileCheck, Copy, Hash, AlertCircle } from "lucide-react";
+import toast from "react-hot-toast";
+import { GoogleAdSlot } from "../components/GoogleAdSlot";
+import { SEOHead } from "../components/SEOHead";
 
-type HashAlgorithm = 'md5' | 'sha1' | 'sha256' | 'sha512';
+type HashAlgorithm = "md5" | "sha1" | "sha256" | "sha512";
 
 interface FileHashResult {
   filename: string;
@@ -18,22 +19,29 @@ export function FileHashPage() {
   const [results, setResults] = useState<FileHashResult[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const generateFileHash = useCallback(async (file: File, algorithm: HashAlgorithm): Promise<string> => {
-    const arrayBuffer = await file.arrayBuffer();
-    const hashBuffer = await crypto.subtle.digest(
-      algorithm === 'md5' ? 'SHA-1' : // MD5 not available, fallback to SHA-1
-      algorithm === 'sha1' ? 'SHA-1' :
-      algorithm === 'sha256' ? 'SHA-256' : 'SHA-512',
-      arrayBuffer
-    );
-    
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  }, []);
+  const generateFileHash = useCallback(
+    async (file: File, algorithm: HashAlgorithm): Promise<string> => {
+      const arrayBuffer = await file.arrayBuffer();
+      const hashBuffer = await crypto.subtle.digest(
+        algorithm === "md5"
+          ? "SHA-1" // MD5 not available, fallback to SHA-1
+          : algorithm === "sha1"
+            ? "SHA-1"
+            : algorithm === "sha256"
+              ? "SHA-256"
+              : "SHA-512",
+        arrayBuffer,
+      );
+
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+    },
+    [],
+  );
 
   const processFiles = useCallback(async () => {
     if (files.length === 0) {
-      toast.error('Please select files to hash');
+      toast.error("Please select files to hash");
       return;
     }
 
@@ -43,24 +51,24 @@ export function FileHashPage() {
 
       for (const file of files) {
         const hashes: Record<HashAlgorithm, string> = {
-          md5: 'MD5 not available in browser',
-          sha1: await generateFileHash(file, 'sha1'),
-          sha256: await generateFileHash(file, 'sha256'),
-          sha512: await generateFileHash(file, 'sha512')
+          md5: "MD5 not available in browser",
+          sha1: await generateFileHash(file, "sha1"),
+          sha256: await generateFileHash(file, "sha256"),
+          sha512: await generateFileHash(file, "sha512"),
         };
 
         newResults.push({
           filename: file.name,
           size: file.size,
-          type: file.type || 'unknown',
-          hashes
+          type: file.type || "unknown",
+          hashes,
         });
       }
 
       setResults(newResults);
       toast.success(`Generated hashes for ${files.length} file(s)`);
     } catch (error) {
-      toast.error('Error generating file hashes');
+      toast.error("Error generating file hashes");
     } finally {
       setLoading(false);
     }
@@ -68,7 +76,7 @@ export function FileHashPage() {
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length > 2) {
-      toast.error('Maximum 2 files allowed');
+      toast.error("Maximum 2 files allowed");
       return;
     }
     setFiles(acceptedFiles);
@@ -84,33 +92,50 @@ export function FileHashPage() {
   const handleCopy = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      toast.success('Hash copied to clipboard');
+      toast.success("Hash copied to clipboard");
     } catch {
-      toast.error('Failed to copy');
+      toast.error("Failed to copy");
     }
   };
 
   const formatFileSize = (bytes: number): string => {
-    if (bytes === 0) return '0 Bytes';
+    if (bytes === 0) return "0 Bytes";
     const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const sizes = ["Bytes", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
 
-  const algorithms: { value: HashAlgorithm; label: string; description: string }[] = [
-    { value: 'md5', label: 'MD5', description: '128-bit (legacy)' },
-    { value: 'sha1', label: 'SHA-1', description: '160-bit (legacy)' },
-    { value: 'sha256', label: 'SHA-256', description: '256-bit (recommended)' },
-    { value: 'sha512', label: 'SHA-512', description: '512-bit (highest security)' }
+  const algorithms: {
+    value: HashAlgorithm;
+    label: string;
+    description: string;
+  }[] = [
+    { value: "md5", label: "MD5", description: "128-bit (legacy)" },
+    { value: "sha1", label: "SHA-1", description: "160-bit (legacy)" },
+    { value: "sha256", label: "SHA-256", description: "256-bit (recommended)" },
+    {
+      value: "sha512",
+      label: "SHA-512",
+      description: "512-bit (highest security)",
+    },
   ];
 
   return (
     <div className="max-w-4xl px-4 py-8 mx-auto sm:px-6 lg:px-8 animate-fade-in">
+         <SEOHead
+        title="File Hash Generator - Calculate MD5, SHA256 for Files Online"
+        description="Generate cryptographic hashes for files online. Drag & drop support for MD5, SHA-1, SHA-256, SHA-512. Client-side processing ensures privacy."
+        keywords="file hash, file checksum, MD5 file, SHA256 file, file integrity, drag drop hash generator"
+        canonicalUrl="/file-hash"
+      />
       <div className="mb-8 text-center">
-        <h1 className="mb-4 text-3xl font-bold text-white sm:text-4xl">File Hash Online</h1>
+        <h1 className="mb-4 text-3xl font-bold text-white sm:text-4xl">
+          File Hash Online
+        </h1>
         <p className="text-lg text-slate-400">
-          Generate MD5, SHA-1, SHA-256, and SHA-512 hashes for your files with drag & drop
+          Generate MD5, SHA-1, SHA-256, and SHA-512 hashes for your files with
+          drag & drop
         </p>
       </div>
 
@@ -120,13 +145,13 @@ export function FileHashPage() {
           <Upload className="w-5 h-5 mr-2 text-orange-500" />
           Upload Files (Max 2 files, 100MB each)
         </h3>
-        
+
         <div
           {...getRootProps()}
           className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
-            isDragActive 
-              ? 'border-orange-500 bg-orange-500/10' 
-              : 'border-slate-600 hover:border-slate-500'
+            isDragActive
+              ? "border-orange-500 bg-orange-500/10"
+              : "border-slate-600 hover:border-slate-500"
           }`}
         >
           <input {...getInputProps()} />
@@ -149,11 +174,14 @@ export function FileHashPage() {
           <div className="mt-4 space-y-2">
             <h4 className="font-medium text-white">Selected Files:</h4>
             {files.map((file, index) => (
-              <div key={index} className="flex items-center justify-between p-3 rounded bg-slate-800">
+              <div
+                key={index}
+                className="flex items-center justify-between p-3 rounded bg-slate-800"
+              >
                 <div>
                   <p className="font-medium text-white">{file.name}</p>
                   <p className="text-sm text-slate-400">
-                    {formatFileSize(file.size)} • {file.type || 'unknown type'}
+                    {formatFileSize(file.size)} • {file.type || "unknown type"}
                   </p>
                 </div>
               </div>
@@ -163,7 +191,7 @@ export function FileHashPage() {
               disabled={loading}
               className="w-full mt-4 btn-primary"
             >
-              {loading ? 'Generating Hashes...' : 'Generate File Hashes'}
+              {loading ? "Generating Hashes..." : "Generate File Hashes"}
             </button>
           </div>
         )}
@@ -178,7 +206,10 @@ export function FileHashPage() {
           </h3>
           <div className="space-y-6">
             {results.map((result, fileIndex) => (
-              <div key={fileIndex} className="p-4 border rounded-lg border-slate-700">
+              <div
+                key={fileIndex}
+                className="p-4 border rounded-lg border-slate-700"
+              >
                 <div className="mb-4">
                   <h4 className="font-medium text-white">{result.filename}</h4>
                   <p className="text-sm text-slate-400">
@@ -189,8 +220,12 @@ export function FileHashPage() {
                   {algorithms.map((algo) => (
                     <div key={algo.value} className="p-3 rounded bg-slate-900">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="font-medium text-white">{algo.label}</span>
-                        <span className="text-sm text-slate-400">{algo.description}</span>
+                        <span className="font-medium text-white">
+                          {algo.label}
+                        </span>
+                        <span className="text-sm text-slate-400">
+                          {algo.description}
+                        </span>
                       </div>
                       <div className="flex items-center space-x-3">
                         <div className="flex-1 font-mono text-sm break-all text-slate-300">
@@ -199,7 +234,9 @@ export function FileHashPage() {
                         <button
                           onClick={() => handleCopy(result.hashes[algo.value])}
                           className="btn-copy"
-                          disabled={result.hashes[algo.value].includes('not available')}
+                          disabled={result.hashes[algo.value].includes(
+                            "not available",
+                          )}
                         >
                           <Copy className="w-4 h-4" />
                         </button>
@@ -223,8 +260,9 @@ export function FileHashPage() {
         </h3>
         <div className="prose prose-invert max-w-none">
           <p className="mb-4 text-slate-400">
-            File hashing generates unique fingerprints for files, allowing you to verify 
-            file integrity, detect changes, and ensure data hasn't been corrupted or tampered with.
+            File hashing generates unique fingerprints for files, allowing you
+            to verify file integrity, detect changes, and ensure data hasn't
+            been corrupted or tampered with.
           </p>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div>
@@ -252,9 +290,12 @@ export function FileHashPage() {
             <div className="flex items-start space-x-2">
               <AlertCircle className="h-5 w-5 text-blue-400 mt-0.5" />
               <div>
-                <h4 className="mb-1 font-medium text-blue-400">Privacy First</h4>
+                <h4 className="mb-1 font-medium text-blue-400">
+                  Privacy First
+                </h4>
                 <p className="text-sm text-blue-200">
-                  All file processing happens locally in your browser. Your files never leave your device.
+                  All file processing happens locally in your browser. Your
+                  files never leave your device.
                 </p>
               </div>
             </div>

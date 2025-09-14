@@ -1,48 +1,52 @@
-import { useState, useCallback } from 'react';
-import { Copy, ArrowRight, ArrowLeft, Braces } from 'lucide-react';
-import toast from 'react-hot-toast';
-import { GoogleAdSlot } from '../components/GoogleAdSlot';
-import React from 'react'; 
+import { useState, useCallback } from "react";
+import { Copy, ArrowRight, ArrowLeft, Braces } from "lucide-react";
+import toast from "react-hot-toast";
+import { GoogleAdSlot } from "../components/GoogleAdSlot";
+import React from "react";
+import { SEOHead } from "../components/SEOHead";
 export function JSONPage() {
-  const [input, setInput] = useState('');
-  const [result, setResult] = useState('');
-  const [mode, setMode] = useState<'escape' | 'unescape'>('escape');
+  const [input, setInput] = useState("");
+  const [result, setResult] = useState("");
+  const [mode, setMode] = useState<"escape" | "unescape">("escape");
 
-  const handleProcess = useCallback((e?: React.FormEvent) => {
-    e?.preventDefault();
-    
-    if (!input.trim()) {
-      toast.error('Please enter some text');
-      return;
-    }
+  const handleProcess = useCallback(
+    (e?: React.FormEvent) => {
+      e?.preventDefault();
 
-    try {
-      if (mode === 'escape') {
-        const escaped = JSON.stringify(input).slice(1, -1); // Remove outer quotes
-        setResult(escaped);
-        toast.success('Text escaped successfully');
-      } else {
-        const unescaped = JSON.parse(`"${input}"`); // Wrap in quotes for parsing
-        setResult(unescaped);
-        toast.success('Text unescaped successfully');
+      if (!input.trim()) {
+        toast.error("Please enter some text");
+        return;
       }
-    } catch (error) {
-      toast.error('Invalid input for JSON processing');
-      setResult('');
-    }
-  }, [input, mode]);
+
+      try {
+        if (mode === "escape") {
+          const escaped = JSON.stringify(input).slice(1, -1); // Remove outer quotes
+          setResult(escaped);
+          toast.success("Text escaped successfully");
+        } else {
+          const unescaped = JSON.parse(`"${input}"`); // Wrap in quotes for parsing
+          setResult(unescaped);
+          toast.success("Text unescaped successfully");
+        }
+      } catch (error) {
+        toast.error("Invalid input for JSON processing");
+        setResult("");
+      }
+    },
+    [input, mode],
+  );
 
   const handleCopy = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      toast.success('Copied to clipboard');
+      toast.success("Copied to clipboard");
     } catch {
-      toast.error('Failed to copy');
+      toast.error("Failed to copy");
     }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
       handleProcess();
     }
   };
@@ -52,9 +56,9 @@ export function JSONPage() {
       const parsed = JSON.parse(input);
       const formatted = JSON.stringify(parsed, null, 2);
       setResult(formatted);
-      toast.success('JSON formatted successfully');
+      toast.success("JSON formatted successfully");
     } catch (error) {
-      toast.error('Invalid JSON format');
+      toast.error("Invalid JSON format");
     }
   }, [input]);
 
@@ -63,16 +67,24 @@ export function JSONPage() {
       const parsed = JSON.parse(input);
       const minified = JSON.stringify(parsed);
       setResult(minified);
-      toast.success('JSON minified successfully');
+      toast.success("JSON minified successfully");
     } catch (error) {
-      toast.error('Invalid JSON format');
+      toast.error("Invalid JSON format");
     }
   }, [input]);
 
   return (
     <div className="max-w-4xl px-4 py-8 mx-auto sm:px-6 lg:px-8 animate-fade-in">
+            <SEOHead
+        title="JSON Escape/Unescape Tool - JSON String Processor"
+        description="Free JSON escape and unescape tool. Safely escape JSON strings for embedding or unescape to readable text. Includes JSON formatter and minifier."
+        keywords="JSON escape, JSON unescape, JSON formatter, JSON minifier, JSON validator, string escape"
+        canonicalUrl="/json"
+      />
       <div className="mb-8 text-center">
-        <h1 className="mb-4 text-3xl font-bold text-white sm:text-4xl">JSON Escape/Unescape</h1>
+        <h1 className="mb-4 text-3xl font-bold text-white sm:text-4xl">
+          JSON Escape/Unescape
+        </h1>
         <p className="text-lg text-slate-400">
           Escape JSON strings for safe embedding or unescape to readable text
         </p>
@@ -82,21 +94,21 @@ export function JSONPage() {
       <div className="flex justify-center mb-6">
         <div className="p-1 rounded-lg bg-slate-800">
           <button
-            onClick={() => setMode('escape')}
+            onClick={() => setMode("escape")}
             className={`px-4 py-2 rounded transition-colors ${
-              mode === 'escape' 
-                ? 'bg-blue-600 text-white' 
-                : 'text-slate-400 hover:text-white'
+              mode === "escape"
+                ? "bg-blue-600 text-white"
+                : "text-slate-400 hover:text-white"
             }`}
           >
             Escape
           </button>
           <button
-            onClick={() => setMode('unescape')}
+            onClick={() => setMode("unescape")}
             className={`px-4 py-2 rounded transition-colors ${
-              mode === 'unescape' 
-                ? 'bg-blue-600 text-white' 
-                : 'text-slate-400 hover:text-white'
+              mode === "unescape"
+                ? "bg-blue-600 text-white"
+                : "text-slate-400 hover:text-white"
             }`}
           >
             Unescape
@@ -109,7 +121,7 @@ export function JSONPage() {
         <div className="tool-card">
           <h3 className="flex items-center mb-4 text-lg font-semibold text-white">
             Input Text
-            {mode === 'escape' ? (
+            {mode === "escape" ? (
               <ArrowRight className="w-5 h-5 ml-2 text-yellow-500" />
             ) : (
               <ArrowLeft className="w-5 h-5 ml-2 text-yellow-500" />
@@ -120,20 +132,21 @@ export function JSONPage() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyPress}
-              placeholder={mode === 'escape' 
-                ? 'Enter text to escape for JSON (e.g., Hello "World"!)' 
-                : 'Enter escaped JSON string (e.g., Hello \\"World\\"!)'
+              placeholder={
+                mode === "escape"
+                  ? 'Enter text to escape for JSON (e.g., Hello "World"!)'
+                  : 'Enter escaped JSON string (e.g., Hello \\"World\\"!)'
               }
               className="h-32 font-mono textarea-field"
               aria-label={`Text to ${mode}`}
             />
             <div className="flex flex-wrap gap-3">
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 className="btn-primary"
                 disabled={!input.trim()}
               >
-                {mode === 'escape' ? 'Escape JSON' : 'Unescape JSON'}
+                {mode === "escape" ? "Escape JSON" : "Unescape JSON"}
               </button>
               <button
                 type="button"
@@ -153,7 +166,7 @@ export function JSONPage() {
               </button>
               <button
                 type="button"
-                onClick={() => setInput('')}
+                onClick={() => setInput("")}
                 className="btn-secondary"
                 disabled={!input}
               >
@@ -202,16 +215,21 @@ export function JSONPage() {
 
       {/* Info Section */}
       <div className="mt-8 tool-card">
-        <h3 className="mb-4 text-lg font-semibold text-white">About JSON Escaping</h3>
+        <h3 className="mb-4 text-lg font-semibold text-white">
+          About JSON Escaping
+        </h3>
         <div className="prose prose-invert max-w-none">
           <p className="mb-4 text-slate-400">
-            JSON escaping is the process of encoding special characters in strings so they 
-            can be safely included in JSON data. This prevents parsing errors and ensures 
-            data integrity when transmitting or storing JSON.
+            JSON escaping is the process of encoding special characters in
+            strings so they can be safely included in JSON data. This prevents
+            parsing errors and ensures data integrity when transmitting or
+            storing JSON.
           </p>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div>
-              <h4 className="mb-2 font-medium text-white">Characters that need escaping:</h4>
+              <h4 className="mb-2 font-medium text-white">
+                Characters that need escaping:
+              </h4>
               <ul className="space-y-1 font-mono text-sm text-slate-400">
                 <li>" → \"</li>
                 <li>\ → \\</li>

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Download, Copy, Plus, X, Search, Code, FileText } from 'lucide-react';
-import { GitIgnoreTemplateFetcher } from '../components/GitIgnoreTemplateFetcher';
-import CustomGitIgnoreGenerator from '../components/CustomGitIgnoreGenerator';
+import React, { useState, useEffect } from "react";
+import { Download, Copy, Plus, X, Search, Code, FileText } from "lucide-react";
+import { GitIgnoreTemplateFetcher } from "../components/GitIgnoreTemplateFetcher";
+import CustomGitIgnoreGenerator from "../components/CustomGitIgnoreGenerator";
 const GitIgnore = () => {
   const [selectedTemplates, setSelectedTemplates] = useState([]);
 
@@ -13,7 +13,8 @@ const GitIgnore = () => {
             Advanced .gitignore Generator
           </h1>
           <p className="text-gray-600">
-            Fetch official templates from GitHub and create custom .gitignore files
+            Fetch official templates from GitHub and create custom .gitignore
+            files
           </p>
         </div>
 
@@ -21,7 +22,17 @@ const GitIgnore = () => {
         <CustomGitIgnoreGenerator templates={selectedTemplates} />
 
         <div className="mt-8 text-sm text-center text-gray-500">
-          <p>Templates sourced from <a href="https://github.com/github/gitignore" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">github/gitignore</a></p>
+          <p>
+            Templates sourced from{" "}
+            <a
+              href="https://github.com/github/gitignore"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline"
+            >
+              github/gitignore
+            </a>
+          </p>
         </div>
       </div>
     </div>

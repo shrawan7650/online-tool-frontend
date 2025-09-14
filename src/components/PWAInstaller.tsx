@@ -1,13 +1,14 @@
-import { useState, useEffect } from 'react';
-import { Download, X } from 'lucide-react';
-import React from 'react'; 
+import { useState, useEffect } from "react";
+import { Download, X } from "lucide-react";
+import React from "react";
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 }
 
 export function PWAInstaller() {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [deferredPrompt, setDeferredPrompt] =
+    useState<BeforeInstallPromptEvent | null>(null);
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
 
   useEffect(() => {
@@ -17,10 +18,10 @@ export function PWAInstaller() {
       setShowInstallPrompt(true);
     };
 
-    window.addEventListener('beforeinstallprompt', handler);
+    window.addEventListener("beforeinstallprompt", handler);
 
     return () => {
-      window.removeEventListener('beforeinstallprompt', handler);
+      window.removeEventListener("beforeinstallprompt", handler);
     };
   }, []);
 
@@ -29,11 +30,11 @@ export function PWAInstaller() {
 
     deferredPrompt.prompt();
     const choiceResult = await deferredPrompt.userChoice;
-    
-    if (choiceResult.outcome === 'accepted') {
-      console.log('PWA installation accepted');
+
+    if (choiceResult.outcome === "accepted") {
+      console.log("PWA installation accepted");
     }
-    
+
     setDeferredPrompt(null);
     setShowInstallPrompt(false);
   };
@@ -71,10 +72,7 @@ export function PWAInstaller() {
           >
             Install
           </button>
-          <button
-            onClick={handleDismiss}
-            className="text-sm btn-secondary"
-          >
+          <button onClick={handleDismiss} className="text-sm btn-secondary">
             Not now
           </button>
         </div>

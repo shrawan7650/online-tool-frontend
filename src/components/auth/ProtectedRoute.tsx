@@ -1,7 +1,7 @@
-import React,{ ReactNode } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
-import { SubscriptionModal } from './SubscriptionModal';
+import React, { ReactNode } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
+import { SubscriptionModal } from "./SubscriptionModal";
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -9,12 +9,14 @@ interface ProtectedRouteProps {
   requiresMaxPro?: boolean;
 }
 
-export function ProtectedRoute({ 
-  children, 
-  requiresPro = false, 
-  requiresMaxPro = false 
+export function ProtectedRoute({
+  children,
+  requiresPro = false,
+  requiresMaxPro = false,
 }: ProtectedRouteProps) {
-  const { user, isAuthenticated } = useSelector((state: RootState) => state.user);
+  const { user, isAuthenticated } = useSelector(
+    (state: RootState) => state.user,
+  );
 
   // If no authentication required, render children
   if (!requiresPro && !requiresMaxPro) {
@@ -28,7 +30,7 @@ export function ProtectedRoute({
         isOpen={true}
         onClose={() => {}}
         requiresLogin={true}
-        requiredPlan={requiresMaxPro ? 'maxpro' : 'pro'}
+        requiredPlan={requiresMaxPro ? "maxpro" : "pro"}
       />
     );
   }
@@ -47,11 +49,7 @@ export function ProtectedRoute({
   // Check Pro requirement
   if (requiresPro && !user.isPro && !user.isMaxPro) {
     return (
-      <SubscriptionModal
-        isOpen={true}
-        onClose={() => {}}
-        requiredPlan="pro"
-      />
+      <SubscriptionModal isOpen={true} onClose={() => {}} requiredPlan="pro" />
     );
   }
 
@@ -59,13 +57,13 @@ export function ProtectedRoute({
   if ((user.isPro || user.isMaxPro) && user.subscriptionExpiry) {
     const expiryDate = new Date(user.subscriptionExpiry);
     const now = new Date();
-    
-    if (expiryDate < now && user.subscriptionStatus !== 'active') {
+
+    if (expiryDate < now && user.subscriptionStatus !== "active") {
       return (
         <SubscriptionModal
           isOpen={true}
           onClose={() => {}}
-          requiredPlan={user.isMaxPro ? 'maxpro' : 'pro'}
+          requiredPlan={user.isMaxPro ? "maxpro" : "pro"}
           isExpired={true}
         />
       );

@@ -1,18 +1,18 @@
 import { useGoogleLogin } from "@react-oauth/google";
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
-import { loginWithGoogle } from "../../store/slices/userSlice";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../store/store";
+import { loginWithGoogle, setShowLoginModal } from "../../store/slices/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react"; // loader spinner
 
-interface GoogleButtonSignupProps {
-  onClose?: () => void;
-}
 
-export const GoogleButtonSignup = ({ onClose }: GoogleButtonSignupProps) => {
+
+export const GoogleButtonSignup = () => {
+
+  const { error, isLoading,showLoginModal } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
@@ -23,14 +23,14 @@ export const GoogleButtonSignup = ({ onClose }: GoogleButtonSignupProps) => {
 
       try {
         const result = await dispatch(
-          loginWithGoogle(tokenResponse.access_token)
+          loginWithGoogle(tokenResponse.access_token),
         );
         console.log("Google login result:", result);
         if (result?.type === "user/loginWithGoogle/fulfilled") {
           toast.success("Signed up successfully");
 
           // Close modal if provided
-          if (onClose) onClose();
+          dispatch(setShowLoginModal(false));
         } else {
           const errorMessage =
             (result as any)?.payload ||

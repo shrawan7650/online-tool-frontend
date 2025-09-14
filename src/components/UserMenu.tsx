@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 export function UserMenu() {
   const dispatch = useDispatch<AppDispatch>();
   const { user, isAuthenticated } = useSelector(
-    (state: RootState) => state.user
+    (state: RootState) => state.user,
   );
   const [isOpen, setIsOpen] = useState(false);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
@@ -40,9 +40,8 @@ export function UserMenu() {
   const isSubscriptionExpired = () => {
     if (!user?.subscriptionExpiry) return false;
     return new Date(user.subscriptionExpiry) < new Date();
-  }; 
-  console.log("user",user);
-  
+  };
+  console.log("user", user);
 
   if (!isAuthenticated || !user) {
     return null;
@@ -58,7 +57,7 @@ export function UserMenu() {
         >
           {user.profilePicture ? (
             <img
-              src={user.profilePicture}
+              src="https://lh3.googleusercontent.com/a/ACg8ocJcxQ4GzQb_HHG3EusycqzyevsR6Mk4rYChcliTb6PqnKTJ9kYi=s96-c"
               alt={user.name}
               className="object-cover w-8 h-8 rounded-full"
             />
@@ -95,7 +94,7 @@ export function UserMenu() {
                   src={
                     user.profilePicture ||
                     `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                      user.name
+                      user.name,
                     )}&background=3b82f6&color=fff`
                   }
                   alt={user.name}

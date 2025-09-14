@@ -1,5 +1,5 @@
-import { configureStore } from '@reduxjs/toolkit';
-import userReducer from './slices/userSlice';
+import { configureStore } from "@reduxjs/toolkit";
+import userReducer from "./slices/userSlice";
 
 export const store = configureStore({
   reducer: {
@@ -8,7 +8,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ['persist/PERSIST'],
+        ignoredActions: ["persist/PERSIST"],
       },
     }),
 });

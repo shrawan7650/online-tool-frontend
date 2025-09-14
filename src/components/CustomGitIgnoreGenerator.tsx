@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Download, Copy, Plus, X, Search, Code, FileText } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { Download, Copy, Plus, X, Search, Code, FileText } from "lucide-react";
 interface Template {
   name: string;
   content: string;
@@ -19,7 +19,7 @@ interface CustomGitIgnoreGeneratorProps {
 
 //   const generateFinalContent = (): void => {
 //     let content = '';
-    
+
 //     // Add header comment
 //     if (templates.length > 0) {
 //       content += `# Generated .gitignore for: ${templates.map(t => t.name).join(', ')}\n`;
@@ -130,74 +130,79 @@ interface CustomGitIgnoreGeneratorProps {
 //   );
 // };
 
-const CustomGitIgnoreGenerator: React.FC<CustomGitIgnoreGeneratorProps> = ({ templates }) => {
-  const [customRules, setCustomRules] = useState<string>('');
-  const [activeTab, setActiveTab] = useState<string>('combined');
+const CustomGitIgnoreGenerator: React.FC<CustomGitIgnoreGeneratorProps> = ({
+  templates,
+}) => {
+  const [customRules, setCustomRules] = useState<string>("");
+  const [activeTab, setActiveTab] = useState<string>("combined");
   const [copied, setCopied] = useState<{ [key: string]: boolean }>({});
 
   const generateTemplateContent = (template: Template): string => {
     let content = `# Generated .gitignore for: ${template.name}\n`;
     content += `# Created on: ${new Date().toLocaleDateString()}\n\n`;
     content += template.content;
-    if (!template.content.endsWith('\n')) content += '\n';
+    if (!template.content.endsWith("\n")) content += "\n";
     return content;
   };
 
   const generateCombinedContent = (): string => {
-    let content = '';
-    
+    let content = "";
+
     // Add header comment
     if (templates.length > 0) {
-      content += `# Generated .gitignore for: ${templates.map(t => t.name).join(', ')}\n`;
+      content += `# Generated .gitignore for: ${templates.map((t) => t.name).join(", ")}\n`;
       content += `# Created on: ${new Date().toLocaleDateString()}\n\n`;
     }
 
     // Add templates content
     templates.forEach((template, index) => {
-      if (index > 0) content += '\n';
+      if (index > 0) content += "\n";
       content += `# ===== ${template.name} =====\n`;
       content += template.content;
-      if (!template.content.endsWith('\n')) content += '\n';
+      if (!template.content.endsWith("\n")) content += "\n";
     });
 
     // Add custom rules
     if (customRules.trim()) {
-      if (content) content += '\n';
-      content += '# ===== Custom Rules =====\n';
+      if (content) content += "\n";
+      content += "# ===== Custom Rules =====\n";
       content += customRules;
-      if (!customRules.endsWith('\n')) content += '\n';
+      if (!customRules.endsWith("\n")) content += "\n";
     }
 
     return content;
   };
 
   const getActiveContent = (): string => {
-    if (activeTab === 'combined') {
+    if (activeTab === "combined") {
       return generateCombinedContent();
     }
-    if (activeTab === 'custom') {
+    if (activeTab === "custom") {
       return customRules;
     }
-    const template = templates.find(t => t.name === activeTab);
-    return template ? generateTemplateContent(template) : '';
+    const template = templates.find((t) => t.name === activeTab);
+    return template ? generateTemplateContent(template) : "";
   };
 
-  const copyToClipboard = async (content: string, tabId: string): Promise<void> => {
+  const copyToClipboard = async (
+    content: string,
+    tabId: string,
+  ): Promise<void> => {
     try {
       await navigator.clipboard.writeText(content);
-      setCopied(prev => ({ ...prev, [tabId]: true }));
+      setCopied((prev) => ({ ...prev, [tabId]: true }));
       setTimeout(() => {
-        setCopied(prev => ({ ...prev, [tabId]: false }));
+        setCopied((prev) => ({ ...prev, [tabId]: false }));
       }, 2000);
     } catch (err) {
-      console.error('Failed to copy:', err);
+      console.error("Failed to copy:", err);
     }
   };
 
   const downloadFile = (content: string, filename: string): void => {
-    const blob = new Blob([content], { type: 'text/plain' });
+    const blob = new Blob([content], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = filename;
     document.body.appendChild(a);
@@ -212,7 +217,9 @@ const CustomGitIgnoreGenerator: React.FC<CustomGitIgnoreGeneratorProps> = ({ tem
     <div className="p-6 rounded-lg shadow-md">
       <div className="flex items-center gap-2 mb-4">
         <FileText className="w-5 h-5 text-green-600" />
-        <h2 className="text-xl font-semibold text-gray-800">Generated .gitignore Files</h2>
+        <h2 className="text-xl font-semibold text-gray-800">
+          Generated .gitignore Files
+        </h2>
       </div>
 
       <div className="mb-4">
@@ -223,7 +230,9 @@ const CustomGitIgnoreGenerator: React.FC<CustomGitIgnoreGeneratorProps> = ({ tem
           placeholder="Add your custom ignore patterns here...&#10;Example:&#10;*.log&#10;.env&#10;/dist&#10;node_modules/"
           className="h-24 textarea-field"
           value={customRules}
-          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setCustomRules(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+            setCustomRules(e.target.value)
+          }
         />
       </div>
 
@@ -235,17 +244,17 @@ const CustomGitIgnoreGenerator: React.FC<CustomGitIgnoreGeneratorProps> = ({ tem
               {/* Combined Tab */}
               {templates.length > 0 && (
                 <button
-                  onClick={() => setActiveTab('combined')}
+                  onClick={() => setActiveTab("combined")}
                   className={`px-4 py-2 text-sm font-medium rounded-t-lg whitespace-nowrap transition-colors ${
-                    activeTab === 'combined'
-                      ? 'bg-blue-100 text-blue-700 border-b-2 border-blue-500'
-                      : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
+                    activeTab === "combined"
+                      ? "bg-blue-100 text-blue-700 border-b-2 border-blue-500"
+                      : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
                   }`}
                 >
                   Combined ({templates.length} templates)
                 </button>
               )}
-              
+
               {/* Individual Template Tabs */}
               {templates.map((template) => (
                 <button
@@ -253,8 +262,8 @@ const CustomGitIgnoreGenerator: React.FC<CustomGitIgnoreGeneratorProps> = ({ tem
                   onClick={() => setActiveTab(template.name)}
                   className={`px-4 py-2 text-sm font-medium rounded-t-lg whitespace-nowrap transition-colors ${
                     activeTab === template.name
-                      ? 'bg-green-100 text-green-700 border-b-2 border-green-500'
-                      : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
+                      ? "bg-green-100 text-green-700 border-b-2 border-green-500"
+                      : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
                   }`}
                 >
                   {template.name}
@@ -264,11 +273,11 @@ const CustomGitIgnoreGenerator: React.FC<CustomGitIgnoreGeneratorProps> = ({ tem
               {/* Custom Rules Tab */}
               {customRules.trim() && (
                 <button
-                  onClick={() => setActiveTab('custom')}
+                  onClick={() => setActiveTab("custom")}
                   className={`px-4 py-2 text-sm font-medium rounded-t-lg whitespace-nowrap transition-colors ${
-                    activeTab === 'custom'
-                      ? 'bg-purple-100 text-purple-700 border-b-2 border-purple-500'
-                      : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
+                    activeTab === "custom"
+                      ? "bg-purple-100 text-purple-700 border-b-2 border-purple-500"
+                      : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
                   }`}
                 >
                   Custom Rules
@@ -281,9 +290,10 @@ const CustomGitIgnoreGenerator: React.FC<CustomGitIgnoreGeneratorProps> = ({ tem
           <div>
             <div className="flex items-center justify-between mb-2">
               <label className="text-sm font-medium text-gray-700">
-                {activeTab === 'combined' && 'Combined .gitignore Content'}
-                {activeTab === 'custom' && 'Custom Rules Only'}
-                {templates.find(t => t.name === activeTab) && `${activeTab} Template`}
+                {activeTab === "combined" && "Combined .gitignore Content"}
+                {activeTab === "custom" && "Custom Rules Only"}
+                {templates.find((t) => t.name === activeTab) &&
+                  `${activeTab} Template`}
               </label>
               <div className="flex gap-2">
                 <button
@@ -291,13 +301,16 @@ const CustomGitIgnoreGenerator: React.FC<CustomGitIgnoreGeneratorProps> = ({ tem
                   className="flex items-center gap-1 px-3 py-1 text-sm text-white transition-colors bg-blue-600 rounded-md hover:bg-blue-700"
                 >
                   <Copy className="w-4 h-4" />
-                  {copied[activeTab] ? 'Copied!' : 'Copy'}
+                  {copied[activeTab] ? "Copied!" : "Copy"}
                 </button>
                 <button
                   onClick={() => {
-                    const filename = activeTab === 'combined' ? '.gitignore' : 
-                                   activeTab === 'custom' ? 'custom-rules.txt' : 
-                                   `${activeTab}.gitignore`;
+                    const filename =
+                      activeTab === "combined"
+                        ? ".gitignore"
+                        : activeTab === "custom"
+                          ? "custom-rules.txt"
+                          : `${activeTab}.gitignore`;
                     downloadFile(activeContent, filename);
                   }}
                   className="flex items-center gap-1 px-3 py-1 text-sm text-white transition-colors bg-green-600 rounded-md hover:bg-green-700"
@@ -309,12 +322,13 @@ const CustomGitIgnoreGenerator: React.FC<CustomGitIgnoreGeneratorProps> = ({ tem
             </div>
             <div className="p-3 overflow-y-auto text-white border border-gray-300 rounded-lg max-h-96">
               <pre className="font-mono text-sm text-gray-800 whitespace-pre-wrap">
-                {activeContent || 'No content available'}
+                {activeContent || "No content available"}
               </pre>
             </div>
             <div className="mt-2 text-xs text-white">
-              Lines: {activeContent.split('\n').length} | Characters: {activeContent.length}
-              {activeTab === 'combined' && templates.length > 1 && (
+              Lines: {activeContent.split("\n").length} | Characters:{" "}
+              {activeContent.length}
+              {activeTab === "combined" && templates.length > 1 && (
                 <span className="ml-2">• Templates: {templates.length}</span>
               )}
             </div>
@@ -325,7 +339,10 @@ const CustomGitIgnoreGenerator: React.FC<CustomGitIgnoreGeneratorProps> = ({ tem
       {templates.length === 0 && !customRules.trim() && (
         <div className="py-8 text-center text-gray-500">
           <FileText className="w-12 h-12 mx-auto mb-2 opacity-50" />
-          <p>Select templates or add custom rules to generate your .gitignore file</p>
+          <p>
+            Select templates or add custom rules to generate your .gitignore
+            file
+          </p>
         </div>
       )}
     </div>

@@ -1,0 +1,32 @@
+User-agent: *
+Allow: /
+
+# Disallow admin and private areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
+Disallow: /static/
+
+# Allow important pages
+Allow: /
+Allow: /url-encode
+Allow: /base64
+Allow: /json
+Allow: /hash
+Allow: /file-hash
+Allow: /file-sharing
+Allow: /escape-toolkit
+Allow: /qr-code
+Allow: /scheduler
+Allow: /clipboard
+Allow: /tiny-notes
+Allow: /password-generator
+Allow: /minifiers
+Allow: /markdown-editor
+Allow: /code-snippet-designer
+
+# Sitemap location
+Sitemap: https://onlinetools.com/sitemap.xml
+
+# Crawl delay (optional)
+Crawl-delay: 1

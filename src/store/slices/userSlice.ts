@@ -1,7 +1,8 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
 
 export interface User {
   id: string;
@@ -10,7 +11,7 @@ export interface User {
   profilePicture?: string;
   isPro: boolean;
   isMaxPro: boolean;
-  subscriptionStatus?: 'active' | 'cancelled' | 'expired';
+  subscriptionStatus?: "active" | "cancelled" | "expired";
   subscriptionExpiry?: string;
 }
 
@@ -20,92 +21,100 @@ interface UserState {
   isLoading: boolean;
   error: string | null;
   isAuthenticated: boolean;
+  showLoginModal: boolean;
 }
 
 const initialState: UserState = {
   user: null,
-  token: localStorage.getItem('online-tool-token'),
+  token: localStorage.getItem("online-tool-token"),
   isLoading: false,
   error: null,
   isAuthenticated: false,
+  showLoginModal: false,
 };
 
 // Async thunks
 export const loginWithGoogle = createAsyncThunk(
-  'user/loginWithGoogle',
+  "user/loginWithGoogle",
   async (googleToken: string, { rejectWithValue }) => {
     try {
       console.log("Logging in with Google token:", googleToken);
       const response = await axios.post(`${API_BASE_URL}/api/auth/google`, {
         token: googleToken,
       });
-      
+
       const { token, user } = response.data;
-      localStorage.setItem('online-tool-token', token);
-      
+      localStorage.setItem("online-tool-token", token);
+
       // Set default authorization header
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
       return { token, user };
     } catch (error: any) {
-      const message = error.response?.data?.error?.message || 'Login failed';
+      const message = error.response?.data?.error?.message || "Login failed";
       return rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const fetchCurrentUser = createAsyncThunk(
-  'user/fetchCurrentUser',
+  "user/fetchCurrentUser",
   async (_, { rejectWithValue, getState }) => {
     try {
       const state = getState() as { user: UserState };
       const token = state.user.token;
-      
+
       if (!token) {
-        throw new Error('No token available');
+        throw new Error("No token available");
       }
-      
+
       const response = await axios.get(`${API_BASE_URL}/api/auth/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      
+
       return response.data.user;
     } catch (error: any) {
-      const message = error.response?.data?.error?.message || 'Failed to fetch user';
+      const message =
+        error.response?.data?.error?.message || "Failed to fetch user";
       return rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const refreshToken = createAsyncThunk(
-  'user/refreshToken',
+  "user/refreshToken",
   async (_, { rejectWithValue, getState }) => {
     try {
       const state = getState() as { user: UserState };
       const token = state.user.token;
-      
+
       if (!token) {
-        throw new Error('No token available');
+        throw new Error("No token available");
       }
-      
-      const response = await axios.post(`${API_BASE_URL}/api/auth/refresh`, {}, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      
+
+      const response = await axios.post(
+        `${API_BASE_URL}/api/auth/refresh`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+
       const { token: newToken, user } = response.data;
-      localStorage.setItem('online-tool-token', newToken);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
-      
+      localStorage.setItem("online-tool-token", newToken);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
+
       return { token: newToken, user };
     } catch (error: any) {
-      const message = error.response?.data?.error?.message || 'Token refresh failed';
+      const message =
+        error.response?.data?.error?.message || "Token refresh failed";
       return rejectWithValue(message);
     }
-  }
+  },
 );
 
 const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState,
   reducers: {
     logout: (state) => {
@@ -113,8 +122,8 @@ const userSlice = createSlice({
       state.token = null;
       state.isAuthenticated = false;
       state.error = null;
-      localStorage.removeItem('online-tool-token');
-      delete axios.defaults.headers.common['Authorization'];
+      localStorage.removeItem("online-tool-token");
+      delete axios.defaults.headers.common["Authorization"];
     },
     clearError: (state) => {
       state.error = null;
@@ -123,6 +132,9 @@ const userSlice = createSlice({
       if (state.user) {
         state.user = { ...state.user, ...action.payload };
       }
+    },
+    setShowLoginModal: (state, action: PayloadAction<boolean>) => {
+      state.showLoginModal = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -144,7 +156,7 @@ const userSlice = createSlice({
         state.error = action.payload as string;
         state.isAuthenticated = false;
       })
-      
+
       // Fetch current user
       .addCase(fetchCurrentUser.pending, (state) => {
         state.isLoading = true;
@@ -160,7 +172,7 @@ const userSlice = createSlice({
         state.error = action.payload as string;
         // Don't set isAuthenticated to false here as token might still be valid
       })
-      
+
       // Refresh token
       .addCase(refreshToken.fulfilled, (state, action) => {
         state.user = action.payload.user;
@@ -173,11 +185,11 @@ const userSlice = createSlice({
         state.user = null;
         state.token = null;
         state.isAuthenticated = false;
-        localStorage.removeItem('online-tool-token');
-        delete axios.defaults.headers.common['Authorization'];
+        localStorage.removeItem("online-tool-token");
+        delete axios.defaults.headers.common["Authorization"];
       });
   },
 });
 
-export const { logout, clearError, updateUser } = userSlice.actions;
+export const { logout, clearError, updateUser,setShowLoginModal } = userSlice.actions;
 export default userSlice.reducer;

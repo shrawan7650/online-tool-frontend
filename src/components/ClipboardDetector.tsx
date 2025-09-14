@@ -1,10 +1,10 @@
-import React,{ useState, useEffect } from 'react';
-import { Clipboard, X, Check } from 'lucide-react';
-import toast from 'react-hot-toast';
+import React, { useState, useEffect } from "react";
+import { Clipboard, X, Check } from "lucide-react";
+import toast from "react-hot-toast";
 
 export function ClipboardDetector() {
   const [showPrompt, setShowPrompt] = useState(false);
-  const [clipboardText, setClipboardText] = useState('');
+  const [clipboardText, setClipboardText] = useState("");
 
   useEffect(() => {
     const checkClipboard = async () => {
@@ -15,7 +15,7 @@ export function ClipboardDetector() {
         }
 
         // Check if we already prompted in this session
-        const hasPrompted = sessionStorage.getItem('clipboard-prompted');
+        const hasPrompted = sessionStorage.getItem("clipboard-prompted");
         if (hasPrompted) {
           return;
         }
@@ -24,11 +24,11 @@ export function ClipboardDetector() {
         if (text && text.trim().length > 0 && text.length < 10000) {
           setClipboardText(text);
           setShowPrompt(true);
-          sessionStorage.setItem('clipboard-prompted', 'true');
+          sessionStorage.setItem("clipboard-prompted", "true");
         }
       } catch (error) {
         // Silently fail - clipboard access might be denied
-        console.debug('Clipboard access not available or denied');
+        console.debug("Clipboard access not available or denied");
       }
     };
 
@@ -39,12 +39,12 @@ export function ClipboardDetector() {
 
   const handleAccept = () => {
     // Create a custom event to notify other components
-    const event = new CustomEvent('clipboard-paste', { 
-      detail: { text: clipboardText } 
+    const event = new CustomEvent("clipboard-paste", {
+      detail: { text: clipboardText },
     });
     window.dispatchEvent(event);
-    
-    toast.success('Clipboard content ready to use!');
+
+    toast.success("Clipboard content ready to use!");
     setShowPrompt(false);
   };
 
@@ -75,10 +75,9 @@ export function ClipboardDetector() {
         </p>
         <div className="p-2 mb-4 overflow-y-auto rounded bg-slate-800 max-h-20">
           <p className="font-mono text-xs break-all text-slate-300">
-            {clipboardText.length > 100 
-              ? `${clipboardText.substring(0, 100)}...` 
-              : clipboardText
-            }
+            {clipboardText.length > 100
+              ? `${clipboardText.substring(0, 100)}...`
+              : clipboardText}
           </p>
         </div>
         <div className="flex space-x-3">
@@ -89,10 +88,7 @@ export function ClipboardDetector() {
             <Check className="w-4 h-4" />
             <span>Use Content</span>
           </button>
-          <button
-            onClick={handleDismiss}
-            className="text-sm btn-secondary"
-          >
+          <button onClick={handleDismiss} className="text-sm btn-secondary">
             Dismiss
           </button>
         </div>

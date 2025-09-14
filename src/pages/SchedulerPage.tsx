@@ -1,13 +1,14 @@
-import React,{ useState, useCallback } from 'react';
-import { Clock, Calendar, Lock, Copy, Share } from 'lucide-react';
-import toast from 'react-hot-toast';
-import axios from 'axios';
-import { format, addDays, addHours, addMinutes } from 'date-fns';
-import { GoogleAdSlot } from '../components/GoogleAdSlot';
+import React, { useState, useCallback } from "react";
+import { Clock, Calendar, Lock, Copy, Share } from "lucide-react";
+import toast from "react-hot-toast";
+import axios from "axios";
+import { format, addDays, addHours, addMinutes } from "date-fns";
+import { GoogleAdSlot } from "../components/GoogleAdSlot";
+import { SEOHead } from "../components/SEOHead";
 
 interface ScheduledItem {
   code: string;
-  type: 'text' | 'file';
+  type: "text" | "file";
   unlockAt: string;
   expiresAt: string;
   title?: string;
@@ -15,24 +16,29 @@ interface ScheduledItem {
 
 interface RetrieveResponse {
   content: string;
-  type: 'text' | 'file';
+  type: "text" | "file";
   title?: string;
   filename?: string;
   url?: string;
 }
 
 export function SchedulerPage() {
-  const [activeTab, setActiveTab] = useState<'create' | 'retrieve'>('create');
-  const [contentType, setContentType] = useState<'text' | 'file'>('text');
-  const [content, setContent] = useState('');
-  const [title, setTitle] = useState('');
-  const [unlockDateTime, setUnlockDateTime] = useState('');
-  const [retrieveCode, setRetrieveCode] = useState('');
+  const [activeTab, setActiveTab] = useState<"create" | "retrieve">("create");
+  const [contentType, setContentType] = useState<"text" | "file">("text");
+  const [content, setContent] = useState("");
+  const [title, setTitle] = useState("");
+  const [unlockDateTime, setUnlockDateTime] = useState("");
+  const [retrieveCode, setRetrieveCode] = useState("");
   const [loading, setLoading] = useState(false);
-  const [scheduledItem, setScheduledItem] = useState<ScheduledItem | null>(null);
-  const [retrieveResult, setRetrieveResult] = useState<RetrieveResponse | null>(null);
+  const [scheduledItem, setScheduledItem] = useState<ScheduledItem | null>(
+    null,
+  );
+  const [retrieveResult, setRetrieveResult] = useState<RetrieveResponse | null>(
+    null,
+  );
 
-  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+  const apiBaseUrl =
+    import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
 
   const getMinDateTime = (): string => {
     const now = new Date();
@@ -45,33 +51,33 @@ export function SchedulerPage() {
     return format(maxDate, "yyyy-MM-dd'T'HH:mm");
   };
 
-  const setQuickTime = (type: 'minutes' | 'hours' | 'days', value: number) => {
+  const setQuickTime = (type: "minutes" | "hours" | "days", value: number) => {
     const now = new Date();
     let targetDate: Date;
-    
+
     switch (type) {
-      case 'minutes':
+      case "minutes":
         targetDate = addMinutes(now, value);
         break;
-      case 'hours':
+      case "hours":
         targetDate = addHours(now, value);
         break;
-      case 'days':
+      case "days":
         targetDate = addDays(now, value);
         break;
     }
-    
+
     setUnlockDateTime(format(targetDate, "yyyy-MM-dd'T'HH:mm"));
   };
 
   const handleSchedule = useCallback(async () => {
     if (!content.trim()) {
-      toast.error('Please enter content to schedule');
+      toast.error("Please enter content to schedule");
       return;
     }
 
     if (!unlockDateTime) {
-      toast.error('Please select unlock date and time');
+      toast.error("Please select unlock date and time");
       return;
     }
 
@@ -79,28 +85,33 @@ export function SchedulerPage() {
     const now = new Date();
 
     if (unlockDate <= now) {
-      toast.error('Unlock time must be in the future');
+      toast.error("Unlock time must be in the future");
       return;
     }
 
     if (unlockDate > addDays(now, 30)) {
-      toast.error('Unlock time cannot be more than 30 days from now');
+      toast.error("Unlock time cannot be more than 30 days from now");
       return;
     }
 
     setLoading(true);
     try {
-      const response = await axios.post<ScheduledItem>(`${apiBaseUrl}/api/scheduler/create`, {
-        type: contentType,
-        content,
-        title: title || undefined,
-        unlockAt: unlockDate.toISOString()
-      });
+      const response = await axios.post<ScheduledItem>(
+        `${apiBaseUrl}/api/scheduler/create`,
+        {
+          type: contentType,
+          content,
+          title: title || undefined,
+          unlockAt: unlockDate.toISOString(),
+        },
+      );
 
       setScheduledItem(response.data);
-      toast.success('Content scheduled successfully!');
+      toast.success("Content scheduled successfully!");
     } catch (error: any) {
-      toast.error(error.response?.data?.error?.message || 'Failed to schedule content');
+      toast.error(
+        error.response?.data?.error?.message || "Failed to schedule content",
+      );
     } finally {
       setLoading(false);
     }
@@ -108,33 +119,36 @@ export function SchedulerPage() {
 
   const handleRetrieve = useCallback(async () => {
     if (!retrieveCode.trim()) {
-      toast.error('Please enter a code');
+      toast.error("Please enter a code");
       return;
     }
 
     if (!/^\d{6}$/.test(retrieveCode)) {
-      toast.error('Code must be exactly 6 digits');
+      toast.error("Code must be exactly 6 digits");
       return;
     }
 
     setLoading(true);
     try {
-      const response = await axios.post<RetrieveResponse>(`${apiBaseUrl}/api/scheduler/retrieve`, {
-        code: retrieveCode
-      });
+      const response = await axios.post<RetrieveResponse>(
+        `${apiBaseUrl}/api/scheduler/retrieve`,
+        {
+          code: retrieveCode,
+        },
+      );
 
       setRetrieveResult(response.data);
-      toast.success('Content retrieved successfully!');
+      toast.success("Content retrieved successfully!");
     } catch (error: any) {
       const status = error.response?.status;
       const errorMessage = error.response?.data?.error?.message;
-      
+
       if (status === 404) {
-        toast.error('Code not found or expired');
+        toast.error("Code not found or expired");
       } else if (status === 423) {
-        toast.error('Content is still locked. Check unlock time.');
+        toast.error("Content is still locked. Check unlock time.");
       } else {
-        toast.error(errorMessage || 'Failed to retrieve content');
+        toast.error(errorMessage || "Failed to retrieve content");
       }
       setRetrieveResult(null);
     } finally {
@@ -145,14 +159,14 @@ export function SchedulerPage() {
   const handleCopy = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      toast.success('Copied to clipboard');
+      toast.success("Copied to clipboard");
     } catch {
-      toast.error('Failed to copy');
+      toast.error("Failed to copy");
     }
   };
 
   const formatDateTime = (dateString: string): string => {
-    return format(new Date(dateString), 'PPP p');
+    return format(new Date(dateString), "PPP p");
   };
 
   const getTimeUntilUnlock = (unlockAt: string): string => {
@@ -160,7 +174,7 @@ export function SchedulerPage() {
     const unlock = new Date(unlockAt).getTime();
     const diff = unlock - now;
 
-    if (diff <= 0) return 'Unlocked';
+    if (diff <= 0) return "Unlocked";
 
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -173,8 +187,16 @@ export function SchedulerPage() {
 
   return (
     <div className="max-w-4xl px-4 py-8 mx-auto sm:px-6 lg:px-8 animate-fade-in">
+            <SEOHead
+        title="Time-Locked Sharing - Schedule Content to Unlock Later"
+        description="Schedule content to unlock at specific date and time. Perfect for announcements, surprises, and time-sensitive information sharing."
+        keywords="time locked sharing, scheduled content, timed release, content scheduler, delayed sharing"
+        canonicalUrl="/scheduler"
+      />
       <div className="mb-8 text-center">
-        <h1 className="mb-4 text-3xl font-bold text-white sm:text-4xl">Time-Locked Sharing</h1>
+        <h1 className="mb-4 text-3xl font-bold text-white sm:text-4xl">
+          Time-Locked Sharing
+        </h1>
         <p className="text-lg text-slate-400">
           Schedule content to unlock at a specific date and time
         </p>
@@ -184,21 +206,21 @@ export function SchedulerPage() {
       <div className="flex justify-center mb-8">
         <div className="p-1 rounded-lg bg-slate-800">
           <button
-            onClick={() => setActiveTab('create')}
+            onClick={() => setActiveTab("create")}
             className={`px-6 py-3 rounded transition-colors ${
-              activeTab === 'create' 
-                ? 'bg-blue-600 text-white' 
-                : 'text-slate-400 hover:text-white'
+              activeTab === "create"
+                ? "bg-blue-600 text-white"
+                : "text-slate-400 hover:text-white"
             }`}
           >
             Schedule Content
           </button>
           <button
-            onClick={() => setActiveTab('retrieve')}
+            onClick={() => setActiveTab("retrieve")}
             className={`px-6 py-3 rounded transition-colors ${
-              activeTab === 'retrieve' 
-                ? 'bg-blue-600 text-white' 
-                : 'text-slate-400 hover:text-white'
+              activeTab === "retrieve"
+                ? "bg-blue-600 text-white"
+                : "text-slate-400 hover:text-white"
             }`}
           >
             Retrieve Content
@@ -206,7 +228,7 @@ export function SchedulerPage() {
         </div>
       </div>
 
-      {activeTab === 'create' && (
+      {activeTab === "create" && (
         <div className="space-y-6">
           {!scheduledItem ? (
             <div className="tool-card">
@@ -214,7 +236,7 @@ export function SchedulerPage() {
                 <Clock className="w-5 h-5 mr-2 text-amber-500" />
                 Schedule Content
               </h3>
-              
+
               <div className="space-y-4">
                 {/* Content Type */}
                 <div>
@@ -223,21 +245,21 @@ export function SchedulerPage() {
                   </label>
                   <div className="p-1 rounded-lg bg-slate-800">
                     <button
-                      onClick={() => setContentType('text')}
+                      onClick={() => setContentType("text")}
                       className={`px-4 py-2 rounded transition-colors ${
-                        contentType === 'text' 
-                          ? 'bg-blue-600 text-white' 
-                          : 'text-slate-400 hover:text-white'
+                        contentType === "text"
+                          ? "bg-blue-600 text-white"
+                          : "text-slate-400 hover:text-white"
                       }`}
                     >
                       Text Content
                     </button>
                     <button
-                      onClick={() => setContentType('file')}
+                      onClick={() => setContentType("file")}
                       className={`px-4 py-2 rounded transition-colors ${
-                        contentType === 'file' 
-                          ? 'bg-blue-600 text-white' 
-                          : 'text-slate-400 hover:text-white'
+                        contentType === "file"
+                          ? "bg-blue-600 text-white"
+                          : "text-slate-400 hover:text-white"
                       }`}
                     >
                       File Link
@@ -247,7 +269,10 @@ export function SchedulerPage() {
 
                 {/* Title */}
                 <div>
-                  <label htmlFor="title" className="block mb-2 text-sm font-medium text-slate-300">
+                  <label
+                    htmlFor="title"
+                    className="block mb-2 text-sm font-medium text-slate-300"
+                  >
                     Title (Optional)
                   </label>
                   <input
@@ -262,16 +287,20 @@ export function SchedulerPage() {
 
                 {/* Content */}
                 <div>
-                  <label htmlFor="content" className="block mb-2 text-sm font-medium text-slate-300">
-                    {contentType === 'text' ? 'Text Content' : 'File Link/URL'}
+                  <label
+                    htmlFor="content"
+                    className="block mb-2 text-sm font-medium text-slate-300"
+                  >
+                    {contentType === "text" ? "Text Content" : "File Link/URL"}
                   </label>
                   <textarea
                     id="content"
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
-                    placeholder={contentType === 'text' 
-                      ? 'Enter the text content to be unlocked...' 
-                      : 'Enter the file sharing link or URL...'
+                    placeholder={
+                      contentType === "text"
+                        ? "Enter the text content to be unlocked..."
+                        : "Enter the file sharing link or URL..."
                     }
                     className="h-32 textarea-field"
                     maxLength={10000}
@@ -283,7 +312,10 @@ export function SchedulerPage() {
 
                 {/* Unlock DateTime */}
                 <div>
-                  <label htmlFor="unlock-time" className="block mb-2 text-sm font-medium text-slate-300">
+                  <label
+                    htmlFor="unlock-time"
+                    className="block mb-2 text-sm font-medium text-slate-300"
+                  >
                     Unlock Date & Time
                   </label>
                   <input
@@ -295,33 +327,33 @@ export function SchedulerPage() {
                     max={getMaxDateTime()}
                     className="input-field"
                   />
-                  
+
                   {/* Quick Time Buttons */}
                   <div className="flex flex-wrap gap-2 mt-2">
                     <button
                       type="button"
-                      onClick={() => setQuickTime('minutes', 30)}
+                      onClick={() => setQuickTime("minutes", 30)}
                       className="text-xs btn-secondary"
                     >
                       +30 min
                     </button>
                     <button
                       type="button"
-                      onClick={() => setQuickTime('hours', 1)}
+                      onClick={() => setQuickTime("hours", 1)}
                       className="text-xs btn-secondary"
                     >
                       +1 hour
                     </button>
                     <button
                       type="button"
-                      onClick={() => setQuickTime('hours', 24)}
+                      onClick={() => setQuickTime("hours", 24)}
                       className="text-xs btn-secondary"
                     >
                       +1 day
                     </button>
                     <button
                       type="button"
-                      onClick={() => setQuickTime('days', 7)}
+                      onClick={() => setQuickTime("days", 7)}
                       className="text-xs btn-secondary"
                     >
                       +1 week
@@ -334,7 +366,7 @@ export function SchedulerPage() {
                   disabled={loading || !content.trim() || !unlockDateTime}
                   className="w-full btn-primary"
                 >
-                  {loading ? 'Scheduling...' : 'Schedule Content'}
+                  {loading ? "Scheduling..." : "Schedule Content"}
                 </button>
               </div>
             </div>
@@ -360,11 +392,13 @@ export function SchedulerPage() {
                     </button>
                   </div>
                 </div>
-                
+
                 <div className="p-4 space-y-2 rounded bg-slate-800">
                   <div className="flex items-center justify-between">
                     <span className="text-slate-400">Unlock Time:</span>
-                    <span className="text-white">{formatDateTime(scheduledItem.unlockAt)}</span>
+                    <span className="text-white">
+                      {formatDateTime(scheduledItem.unlockAt)}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-slate-400">Time Until Unlock:</span>
@@ -374,16 +408,18 @@ export function SchedulerPage() {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-slate-400">Expires:</span>
-                    <span className="text-white">{formatDateTime(scheduledItem.expiresAt)}</span>
+                    <span className="text-white">
+                      {formatDateTime(scheduledItem.expiresAt)}
+                    </span>
                   </div>
                 </div>
 
                 <button
                   onClick={() => {
                     setScheduledItem(null);
-                    setContent('');
-                    setTitle('');
-                    setUnlockDateTime('');
+                    setContent("");
+                    setTitle("");
+                    setUnlockDateTime("");
                   }}
                   className="w-full btn-secondary"
                 >
@@ -397,32 +433,41 @@ export function SchedulerPage() {
         </div>
       )}
 
-      {activeTab === 'retrieve' && (
+      {activeTab === "retrieve" && (
         <div className="space-y-6">
           <div className="tool-card">
-            <h3 className="mb-4 text-lg font-semibold text-white">Retrieve Scheduled Content</h3>
+            <h3 className="mb-4 text-lg font-semibold text-white">
+              Retrieve Scheduled Content
+            </h3>
             <div className="space-y-4">
               <div>
-                <label htmlFor="retrieve-code" className="block mb-2 text-sm font-medium text-slate-300">
+                <label
+                  htmlFor="retrieve-code"
+                  className="block mb-2 text-sm font-medium text-slate-300"
+                >
                   6-Digit Code
                 </label>
                 <input
                   id="retrieve-code"
                   type="text"
                   value={retrieveCode}
-                  onChange={(e) => setRetrieveCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  onChange={(e) =>
+                    setRetrieveCode(
+                      e.target.value.replace(/\D/g, "").slice(0, 6),
+                    )
+                  }
                   placeholder="000000"
                   className="font-mono text-lg text-center input-field"
                   maxLength={6}
                 />
               </div>
 
-              <button 
+              <button
                 onClick={handleRetrieve}
                 className="w-full btn-primary"
                 disabled={loading || retrieveCode.length !== 6}
               >
-                {loading ? 'Checking...' : 'Retrieve Content'}
+                {loading ? "Checking..." : "Retrieve Content"}
               </button>
             </div>
           </div>
@@ -436,21 +481,23 @@ export function SchedulerPage() {
               <div className="space-y-4">
                 {retrieveResult.title && (
                   <div>
-                    <h4 className="text-lg font-medium text-white">{retrieveResult.title}</h4>
+                    <h4 className="text-lg font-medium text-white">
+                      {retrieveResult.title}
+                    </h4>
                   </div>
                 )}
-                
+
                 <div className="p-4 rounded bg-slate-800">
-                  {retrieveResult.type === 'text' ? (
+                  {retrieveResult.type === "text" ? (
                     <div className="whitespace-pre-wrap text-slate-300">
                       {retrieveResult.content}
                     </div>
                   ) : (
                     <div>
                       <p className="mb-2 text-slate-400">File Link:</p>
-                      <a 
-                        href={retrieveResult.content} 
-                        target="_blank" 
+                      <a
+                        href={retrieveResult.content}
+                        target="_blank"
                         rel="noopener noreferrer"
                         className="text-blue-400 underline break-all hover:text-blue-300"
                       >
@@ -468,7 +515,7 @@ export function SchedulerPage() {
                     <Copy className="w-4 h-4" />
                     <span>Copy Content</span>
                   </button>
-                  {retrieveResult.type === 'file' && (
+                  {retrieveResult.type === "file" && (
                     <a
                       href={retrieveResult.content}
                       target="_blank"

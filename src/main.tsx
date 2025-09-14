@@ -1,27 +1,28 @@
-import React,{ StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { Toaster } from 'react-hot-toast';
-import App from './App.tsx';
-import { ErrorBoundary } from './components/ErrorBoundary.tsx';
-import { PWAInstaller } from './components/PWAInstaller.tsx';
-import { store } from './store/store.ts';
-import './index.css';
+import React, { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import { Provider } from "react-redux";
+import { Toaster } from "react-hot-toast";
+import App from "./App.tsx";
+import { ErrorBoundary } from "./components/ErrorBoundary.tsx";
+import { PWAInstaller } from "./components/PWAInstaller.tsx";
+import { HelmetProvider } from 'react-helmet-async';
+import { store } from "./store/store.ts";
+import "./index.css";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 // Register service worker
-if ('serviceWorker' in navigator && import.meta.env.PROD) {
-  window.addEventListener('load', () => {
-    import('virtual:pwa-register').then(({ registerSW }) => {
+if ("serviceWorker" in navigator && import.meta.env.PROD) {
+  window.addEventListener("load", () => {
+    import("virtual:pwa-register").then(({ registerSW }) => {
       registerSW({
         onNeedRefresh() {
-          if (confirm('New content available, reload?')) {
+          if (confirm("New content available, reload?")) {
             window.location.reload();
           }
         },
         onOfflineReady() {
-          console.log('App ready to work offline');
-        }
+          console.log("App ready to work offline");
+        },
       });
     });
   });
@@ -32,12 +33,12 @@ const sendPageView = (path: string) => {
   if (import.meta.env.PROD && navigator.sendBeacon) {
     navigator.sendBeacon(
       `${import.meta.env.VITE_API_BASE_URL}/metrics`,
-      JSON.stringify({ 
-        type: 'pageview', 
-        path, 
+      JSON.stringify({
+        type: "pageview",
+        path,
         timestamp: Date.now(),
-        userAgent: navigator.userAgent.substring(0, 200)
-      })
+        userAgent: navigator.userAgent.substring(0, 200),
+      }),
     );
   }
 };
@@ -45,30 +46,30 @@ const sendPageView = (path: string) => {
 // Track initial page load
 sendPageView(window.location.pathname);
 
-createRoot(document.getElementById('root')!).render(
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ErrorBoundary>
+    <HelmetProvider>
       <Provider store={store}>
         <BrowserRouter>
-        <GoogleOAuthProvider clientId="58082592124-l79uh1lpb3qqitjfeikqih48jccvi8ei.apps.googleusercontent.com">
-
-          <App />
-          <Toaster
-            position="top-right"
-            toastOptions={{
-              duration: 4000,
-              style: {
-                background: '#1e293b',
-                color: '#f1f5f9',
-                border: '1px solid #475569'
-              }
-            }}
-          />
-          <PWAInstaller />
+          <GoogleOAuthProvider clientId="58082592124-l79uh1lpb3qqitjfeikqih48jccvi8ei.apps.googleusercontent.com">
+            <App />
+            <Toaster
+              position="top-right"
+              toastOptions={{
+                duration: 4000,
+                style: {
+                  background: "#1e293b",
+                  color: "#f1f5f9",
+                  border: "1px solid #475569",
+                },
+              }}
+            />
+            <PWAInstaller />
           </GoogleOAuthProvider>
-
         </BrowserRouter>
       </Provider>
+      </HelmetProvider>
     </ErrorBoundary>
-  </StrictMode>
+  </StrictMode>,
 );
