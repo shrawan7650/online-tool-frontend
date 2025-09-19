@@ -28,7 +28,7 @@ interface Note {
 }
 
 export function TinyNotesPage() {
-  const { isAuthenticated, user,showLoginModal } = useSelector(
+  const { isAuthenticated, user, showLoginModal } = useSelector(
     (state: RootState) => state.user
   );
   const dispatch = useDispatch();
@@ -46,14 +46,14 @@ export function TinyNotesPage() {
   >("idle");
 
   const apiBaseUrl =
-    import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
+    import.meta.env.VITE_API_BASE_URL_PRODUCTION || "http://localhost:8080";
 
   // Load notes from localStorage on component mount
   useEffect(() => {
     if (isAuthenticated && user) {
       // Load from database for Pro users
       loadNotesFromDatabase();
-    } 
+    }
   }, [isAuthenticated, user]);
 
   // const loadNotesFromLocalStorage = () => {
@@ -79,7 +79,9 @@ export function TinyNotesPage() {
     setLoading(true);
     try {
       const response = await axios.get(`${apiBaseUrl}/api/notes`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("online-tool-token")}` },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("online-tool-token")}`,
+        },
       });
 
       const dbNotes = response.data.notes.map((note: any) => ({
@@ -125,7 +127,9 @@ export function TinyNotesPage() {
           },
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("online-tool-token")}`,
+              Authorization: `Bearer ${localStorage.getItem(
+                "online-tool-token"
+              )}`,
             },
           }
         );
@@ -152,7 +156,9 @@ export function TinyNotesPage() {
           },
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("online-tool-token")}`,
+              Authorization: `Bearer ${localStorage.getItem(
+                "online-tool-token"
+              )}`,
             },
           }
         );
@@ -172,7 +178,9 @@ export function TinyNotesPage() {
 
     try {
       await axios.delete(`${apiBaseUrl}/api/notes/${noteId}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("online-tool-token")}` },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("online-tool-token")}`,
+        },
       });
     } catch (error) {
       console.error("Error deleting note from database:", error);
@@ -321,7 +329,9 @@ export function TinyNotesPage() {
 
     try {
       const response = await axios.get(`${apiBaseUrl}/api/notes/export`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("online-tool-token")}` },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("online-tool-token")}`,
+        },
       });
 
       const dataStr = JSON.stringify(response.data.notes, null, 2);
@@ -802,9 +812,9 @@ export function TinyNotesPage() {
           <div className="p-4 mt-4 border rounded-lg bg-blue-900/20 border-blue-700/30">
             <p className="text-sm text-blue-200">
               <strong>Upgrade to Pro</strong> for cloud sync, unlimited notes,
-              and advanced features  Comming Soon....
+              and advanced features Comming Soon....
               <button className="ml-1 text-blue-400 underline hover:text-blue-300">
-                Learn more 
+                Learn more
               </button>
             </p>
           </div>

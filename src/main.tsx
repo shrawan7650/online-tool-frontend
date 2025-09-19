@@ -6,7 +6,7 @@ import { Toaster } from "react-hot-toast";
 import App from "./App.tsx";
 import { ErrorBoundary } from "./components/ErrorBoundary.tsx";
 import { PWAInstaller } from "./components/PWAInstaller.tsx";
-import { HelmetProvider } from 'react-helmet-async';
+import { HelmetProvider } from "react-helmet-async";
 import { store } from "./store/store.ts";
 import "./index.css";
 import { GoogleOAuthProvider } from "@react-oauth/google";
@@ -32,13 +32,13 @@ if ("serviceWorker" in navigator && import.meta.env.PROD) {
 const sendPageView = (path: string) => {
   if (import.meta.env.PROD && navigator.sendBeacon) {
     navigator.sendBeacon(
-      `${import.meta.env.VITE_API_BASE_URL}/metrics`,
+      `${import.meta.env.VITE_API_BASE_URL_PRODUCTION}/metrics`,
       JSON.stringify({
         type: "pageview",
         path,
         timestamp: Date.now(),
         userAgent: navigator.userAgent.substring(0, 200),
-      }),
+      })
     );
   }
 };
@@ -49,27 +49,29 @@ sendPageView(window.location.pathname);
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ErrorBoundary>
-    <HelmetProvider>
-      <Provider store={store}>
-        <BrowserRouter>
-          <GoogleOAuthProvider clientId="58082592124-l79uh1lpb3qqitjfeikqih48jccvi8ei.apps.googleusercontent.com">
-            <App />
-            <Toaster
-              position="top-right"
-              toastOptions={{
-                duration: 4000,
-                style: {
-                  background: "#1e293b",
-                  color: "#f1f5f9",
-                  border: "1px solid #475569",
-                },
-              }}
-            />
-            <PWAInstaller />
-          </GoogleOAuthProvider>
-        </BrowserRouter>
-      </Provider>
+      <HelmetProvider>
+        <Provider store={store}>
+          <BrowserRouter>
+            <GoogleOAuthProvider
+              clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}
+            >
+              <App />
+              <Toaster
+                position="top-right"
+                toastOptions={{
+                  duration: 4000,
+                  style: {
+                    background: "#1e293b",
+                    color: "#f1f5f9",
+                    border: "1px solid #475569",
+                  },
+                }}
+              />
+              <PWAInstaller />
+            </GoogleOAuthProvider>
+          </BrowserRouter>
+        </Provider>
       </HelmetProvider>
     </ErrorBoundary>
-  </StrictMode>,
+  </StrictMode>
 );

@@ -82,7 +82,7 @@ export function Layout({ children }: LayoutProps) {
               )}
 
               <a
-                href="https://github.com"
+                href="https://github.com/shrawan7650"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 transition-colors rounded-lg text-slate-300 hover:text-white hover:bg-slate-800"

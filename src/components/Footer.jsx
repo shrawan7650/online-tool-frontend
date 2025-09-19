@@ -69,7 +69,7 @@ function Footer() {
 
             {/* Company + Legal */}
             <div className="space-y-6">
-              <div>
+              {/* <div>
                 <h4 className="mb-3 font-semibold text-white">Company</h4>
                 <ul className="space-y-2 text-sm text-slate-400">
                   <li><a href="https://onlinetools.com" className="hover:text-white">Official Website</a></li>
@@ -77,7 +77,7 @@ function Footer() {
                   <li><a href="https://docs.onlinetools.com" className="hover:text-white">Documentation</a></li>
                   <li><a href="https://status.onlinetools.com" className="hover:text-white">Status Page</a></li>
                 </ul>
-              </div>
+              </div> */}
 
               <div>
                 <h4 className="mb-3 font-semibold text-white">Legal</h4>
@@ -94,7 +94,7 @@ function Footer() {
           {/* Socials */}
           <div className="flex flex-wrap gap-3 md:col-span-4">
             <a
-              href="https://twitter.com/onlinetools"
+              href="https://twitter.com"
               target="_blank"
               rel="noopener noreferrer"
               className="p-2 transition-colors rounded-lg text-slate-400 hover:text-blue-400 hover:bg-slate-800"
@@ -103,7 +103,7 @@ function Footer() {
               <Twitter className="w-5 h-5" />
             </a>
             <a
-              href="https://github.com/onlinetools"
+              href="https://github.com/shrawan7650"
               target="_blank"
               rel="noopener noreferrer"
               className="p-2 transition-colors rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
@@ -112,7 +112,7 @@ function Footer() {
               <Github className="w-5 h-5" />
             </a>
             <a
-              href="https://linkedin.com/company/onlinetools"
+              href="https://linkedin.com/shrawan-kumar-rai"
               target="_blank"
               rel="noopener noreferrer"
               className="p-2 transition-colors rounded-lg text-slate-400 hover:text-blue-600 hover:bg-slate-800"
@@ -121,7 +121,7 @@ function Footer() {
               <Linkedin className="w-5 h-5" />
             </a>
             <a
-              href="https://instagram.com/onlinetools"
+              href="https://www.instagram.com/inspitech/"
               target="_blank"
               rel="noopener noreferrer"
               className="p-2 transition-colors rounded-lg text-slate-400 hover:text-pink-500 hover:bg-slate-800"
@@ -130,7 +130,7 @@ function Footer() {
               <Instagram className="w-5 h-5" />
             </a>
             <a
-              href="https://youtube.com/@onlinetools"
+              href="https://youtube.com/@inspitech"
               target="_blank"
               rel="noopener noreferrer"
               className="p-2 transition-colors rounded-lg text-slate-400 hover:text-red-500 hover:bg-slate-800"

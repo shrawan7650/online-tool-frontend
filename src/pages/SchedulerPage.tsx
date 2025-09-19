@@ -31,14 +31,14 @@ export function SchedulerPage() {
   const [retrieveCode, setRetrieveCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [scheduledItem, setScheduledItem] = useState<ScheduledItem | null>(
-    null,
+    null
   );
   const [retrieveResult, setRetrieveResult] = useState<RetrieveResponse | null>(
-    null,
+    null
   );
 
   const apiBaseUrl =
-    import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
+    import.meta.env.VITE_API_BASE_URL_PRODUCTION || "http://localhost:8080";
 
   const getMinDateTime = (): string => {
     const now = new Date();
@@ -103,14 +103,14 @@ export function SchedulerPage() {
           content,
           title: title || undefined,
           unlockAt: unlockDate.toISOString(),
-        },
+        }
       );
 
       setScheduledItem(response.data);
       toast.success("Content scheduled successfully!");
-    } catch (error: any) {
+    } catch (error) {
       toast.error(
-        error.response?.data?.error?.message || "Failed to schedule content",
+        error.response?.data?.error?.message || "Failed to schedule content"
       );
     } finally {
       setLoading(false);
@@ -134,12 +134,12 @@ export function SchedulerPage() {
         `${apiBaseUrl}/api/scheduler/retrieve`,
         {
           code: retrieveCode,
-        },
+        }
       );
 
       setRetrieveResult(response.data);
       toast.success("Content retrieved successfully!");
-    } catch (error: any) {
+    } catch (error) {
       const status = error.response?.status;
       const errorMessage = error.response?.data?.error?.message;
 
@@ -187,7 +187,7 @@ export function SchedulerPage() {
 
   return (
     <div className="max-w-4xl px-4 py-8 mx-auto sm:px-6 lg:px-8 animate-fade-in">
-            <SEOHead
+      <SEOHead
         title="Time-Locked Sharing - Schedule Content to Unlock Later"
         description="Schedule content to unlock at specific date and time. Perfect for announcements, surprises, and time-sensitive information sharing."
         keywords="time locked sharing, scheduled content, timed release, content scheduler, delayed sharing"
@@ -453,7 +453,7 @@ export function SchedulerPage() {
                   value={retrieveCode}
                   onChange={(e) =>
                     setRetrieveCode(
-                      e.target.value.replace(/\D/g, "").slice(0, 6),
+                      e.target.value.replace(/\D/g, "").slice(0, 6)
                     )
                   }
                   placeholder="000000"

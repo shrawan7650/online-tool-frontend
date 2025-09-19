@@ -140,7 +140,7 @@ export function ContactPage() {
                 <div>
                   <p className="font-medium text-white">Email</p>
                   <p className="text-sm text-slate-400">
-                    support@onlinetools.com
+                    shrawan2401@gmail.com
                   </p>
                   <p className="mt-1 text-xs text-slate-500">
                     We typically respond within 24 hours
@@ -152,7 +152,7 @@ export function ContactPage() {
                 <Phone className="w-5 h-5 mt-1 text-green-500" />
                 <div>
                   <p className="font-medium text-white">Phone</p>
-                  <p className="text-sm text-slate-400">+1 (555) 123-4567</p>
+                  <p className="text-sm text-slate-400">9905737772</p>
                   <p className="mt-1 text-xs text-slate-500">
                     Mon-Fri, 9 AM - 6 PM EST
                   </p>
@@ -164,11 +164,11 @@ export function ContactPage() {
                 <div>
                   <p className="font-medium text-white">Address</p>
                   <p className="text-sm text-slate-400">
-                    123 Tech Street
+                      chandigarh university 
                     <br />
-                    San Francisco, CA 94105
+                    chandigarh university ,140413
                     <br />
-                    United States
+                  INDIA
                   </p>
                 </div>
               </div>

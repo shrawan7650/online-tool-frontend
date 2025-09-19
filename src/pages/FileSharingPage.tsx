@@ -47,13 +47,13 @@ export function FileSharingPage() {
   const [loading, setLoading] = useState(false);
   const [uploadResult, setUploadResult] = useState<UploadResponse | null>(null);
   const [retrieveResult, setRetrieveResult] = useState<RetrieveResponse | null>(
-    null,
+    null
   );
   const [previewFile, setPreviewFile] = useState<File | null>(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   const apiBaseUrl =
-    import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
+    import.meta.env.VITE_API_BASE_URL_PRODUCTION || "http://localhost:8080";
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length > 2) {
@@ -89,7 +89,7 @@ export function FileSharingPage() {
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
-        },
+        }
       );
 
       setUploadResult(response.data);
@@ -106,7 +106,7 @@ export function FileSharingPage() {
       }
     } catch (error) {
       toast.error(
-        error.response?.data?.error?.message || "Failed to upload files",
+        error.response?.data?.error?.message || "Failed to upload files"
       );
     } finally {
       setLoading(false);
@@ -130,7 +130,7 @@ export function FileSharingPage() {
         `${apiBaseUrl}/api/files/retrieve`,
         {
           code: retrieveCode,
-        },
+        }
       );
 
       setRetrieveResult(response.data);
@@ -216,7 +216,7 @@ export function FileSharingPage() {
 
   return (
     <div className="max-w-4xl px-4 py-8 mx-auto sm:px-6 lg:px-8 animate-fade-in">
-          <SEOHead
+      <SEOHead
         title="File Sharing Online - Upload & Share Files with Expiry"
         description="Upload and share files securely with automatic expiry. Supports images, documents, videos up to 50MB. Get shareable codes with preview support."
         keywords="file sharing, upload files, share files online, temporary file sharing, file upload, secure file sharing"
@@ -478,7 +478,7 @@ export function FileSharingPage() {
                   value={retrieveCode}
                   onChange={(e) =>
                     setRetrieveCode(
-                      e.target.value.replace(/\D/g, "").slice(0, 6),
+                      e.target.value.replace(/\D/g, "").slice(0, 6)
                     )
                   }
                   placeholder="000000"
@@ -537,7 +537,7 @@ export function FileSharingPage() {
                       onClick={() =>
                         handleDirectDownload(
                           retrieveResult.url,
-                          retrieveResult.filename,
+                          retrieveResult.filename
                         )
                       }
                       className="inline-flex items-center space-x-2 btn-primary"

@@ -36,15 +36,15 @@ export function ClipboardPage() {
   const [showRetrievePin, setShowRetrievePin] = useState(false);
   const [loading, setLoading] = useState(false);
   const [createdClip, setCreatedClip] = useState<ClipboardResponse | null>(
-    null,
+    null
   );
   const [retrievedText, setRetrievedText] = useState<RetrieveResponse | null>(
-    null,
+    null
   );
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
   const apiBaseUrl =
-    import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
+    import.meta.env.VITE_API_BASE_URL_PRODUCTION || "http://localhost:8080";
 
   // Track unsaved changes
   useEffect(() => {
@@ -75,7 +75,7 @@ export function ClipboardPage() {
 
       if (text.length > MAX_CHARS) {
         toast.error(
-          `Text too long (max ${MAX_CHARS.toLocaleString()} characters)`,
+          `Text too long (max ${MAX_CHARS.toLocaleString()} characters)`
         );
         return;
       }
@@ -93,22 +93,22 @@ export function ClipboardPage() {
             text,
             pin: pin || undefined,
             expiresIn,
-          },
+          }
         );
 
         setCreatedClip(response.data);
         setHasUnsavedChanges(false);
         toast.success("Clipboard note created successfully!");
-      } catch (error: any) {
+      } catch (error) {
         toast.error(
           error.response?.data?.error?.message ||
-            "Failed to create clipboard note",
+            "Failed to create clipboard note"
         );
       } finally {
         setLoading(false);
       }
     },
-    [text, pin, expiresIn, apiBaseUrl],
+    [text, pin, expiresIn, apiBaseUrl]
   );
 
   const handleRetrieve = useCallback(
@@ -132,12 +132,12 @@ export function ClipboardPage() {
           {
             code: retrieveCode,
             pin: retrievePin || undefined,
-          },
+          }
         );
 
         setRetrievedText(response.data);
         toast.success("Clipboard note retrieved successfully!");
-      } catch (error: any) {
+      } catch (error) {
         const errorMessage =
           error.response?.data?.error?.message ||
           "Failed to retrieve clipboard note";
@@ -153,7 +153,7 @@ export function ClipboardPage() {
         setLoading(false);
       }
     },
-    [retrieveCode, retrievePin, apiBaseUrl],
+    [retrieveCode, retrievePin, apiBaseUrl]
   );
 
   const handleCopy = async (text: string) => {
@@ -204,7 +204,7 @@ export function ClipboardPage() {
 
   return (
     <div className="max-w-4xl px-4 py-8 mx-auto sm:px-6 lg:px-8 animate-fade-in">
-          <SEOHead
+      <SEOHead
         title="Secure Online Clipboard - Share Text with Temporary Codes"
         description="Share text securely with temporary 6-digit codes. AES-256 encrypted, auto-expires, PIN protection available. Perfect for sharing sensitive information safely."
         keywords="secure clipboard, online clipboard, text sharing, encrypted sharing, temporary codes, secure text transfer"
@@ -418,7 +418,7 @@ export function ClipboardPage() {
                     value={retrieveCode}
                     onChange={(e) =>
                       setRetrieveCode(
-                        e.target.value.replace(/\D/g, "").slice(0, 6),
+                        e.target.value.replace(/\D/g, "").slice(0, 6)
                       )
                     }
                     placeholder="000000"
@@ -441,7 +441,7 @@ export function ClipboardPage() {
                       value={retrievePin}
                       onChange={(e) =>
                         setRetrievePin(
-                          e.target.value.replace(/\D/g, "").slice(0, 4),
+                          e.target.value.replace(/\D/g, "").slice(0, 4)
                         )
                       }
                       placeholder="Optional 4-digit PIN"

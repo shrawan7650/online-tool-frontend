@@ -64,7 +64,7 @@ vercel domains add www.onlinetools.com
 Go to Vercel Dashboard → Project → Settings → Environment Variables:
 
 ```env
-VITE_API_BASE_URL=https://api.onlinetools.com
+VITE_API_BASE_URL_PRODUCTION=https://api.onlinetools.com
 VITE_GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
 VITE_RAZORPAY_KEY_ID=rzp_live_xxxxxxxxxxxxxxxx
 VITE_ENABLE_ADS=true

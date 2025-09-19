@@ -38,7 +38,7 @@ export function SubscriptionModal({
 }: SubscriptionModalProps) {
   const dispatch = useDispatch<AppDispatch>();
   const { user, isAuthenticated } = useSelector(
-    (state: RootState) => state.user,
+    (state: RootState) => state.user
   );
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [plans, setPlans] = useState<Plan[]>([]);
@@ -46,7 +46,7 @@ export function SubscriptionModal({
   const [selectedPlan, setSelectedPlan] = useState<string>(requiredPlan);
 
   const API_BASE_URL =
-    import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
+    import.meta.env.VITE_API_BASE_URL_PRODUCTION || "http://localhost:8080";
 
   useEffect(() => {
     if (isOpen) {
@@ -58,7 +58,7 @@ export function SubscriptionModal({
   const fetchPlans = async () => {
     try {
       const response = await axios.get(
-        `${API_BASE_URL}/api/subscription/plans`,
+        `${API_BASE_URL}/api/subscription/plans`
       );
       setPlans(response.data.plans);
     } catch (error) {
@@ -89,9 +89,11 @@ export function SubscriptionModal({
         { planType },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("online-tool-token")}`,
+            Authorization: `Bearer ${localStorage.getItem(
+              "online-tool-token"
+            )}`,
           },
-        },
+        }
       );
 
       const { subscription } = response.data;
@@ -115,9 +117,11 @@ export function SubscriptionModal({
               },
               {
                 headers: {
-                  Authorization: `Bearer ${localStorage.getItem("online-tool-token")}`,
+                  Authorization: `Bearer ${localStorage.getItem(
+                    "online-tool-token"
+                  )}`,
                 },
-              },
+              }
             );
 
             // Update user state
@@ -126,7 +130,7 @@ export function SubscriptionModal({
                 isPro: true,
                 isMaxPro: planType === "maxpro",
                 subscriptionStatus: "active",
-              }),
+              })
             );
 
             toast.success("Subscription activated successfully!");
@@ -151,9 +155,9 @@ export function SubscriptionModal({
 
       const razorpay = new window.Razorpay(options);
       razorpay.open();
-    } catch (error: any) {
+    } catch (error) {
       toast.error(
-        error.response?.data?.error?.message || "Failed to create subscription",
+        error.response?.data?.error?.message || "Failed to create subscription"
       );
     } finally {
       setLoading(false);
@@ -182,15 +186,15 @@ export function SubscriptionModal({
                 {isExpired
                   ? "Subscription Expired"
                   : requiresLogin
-                    ? "Login Required"
-                    : "Upgrade to Pro"}
+                  ? "Login Required"
+                  : "Upgrade to Pro"}
               </h2>
               <p className="mt-1 text-slate-400">
                 {isExpired
                   ? "Your subscription has expired. Renew to continue using Pro features."
                   : requiresLogin
-                    ? "Please sign in to access this feature."
-                    : "Unlock all features with a Pro subscription."}
+                  ? "Please sign in to access this feature."
+                  : "Unlock all features with a Pro subscription."}
               </p>
             </div>
             <button
