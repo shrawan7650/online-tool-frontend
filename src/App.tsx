@@ -29,7 +29,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "./store/store";
 import {
   fetchCurrentUser,
-  logout,
+  logoutUser,
   refreshToken,
 } from "./store/slices/userSlice";
 import ScrollToTop from "./components/ScrollToTop";
@@ -47,7 +47,7 @@ function App() {
         return dispatch(fetchCurrentUser());
       })
       .catch(() => {
-        dispatch(logout());
+        dispatch(logoutUser());
       })
       .finally(() => {
         setLoading(false);
@@ -56,7 +56,7 @@ function App() {
   
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center h-screen animate-spin">
         <Loader />
       </div>
     );
