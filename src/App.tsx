@@ -23,7 +23,7 @@ import { TermsPage } from "./pages/TermsPage";
 import { DisclaimerPage } from "./pages/DisclaimerPage";
 import { ContactPage } from "./pages/ContactPage";
 import { NotFound } from "./pages/NotFound";
-import { CodeSnippetDesigner } from './pages/CodeSnippetDesigner';
+import { CodeSnippetDesigner } from "./pages/CodeSnippetDesigner";
 import { ClipboardDetector } from "./components/ClipboardDetector";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "./store/store";
@@ -33,26 +33,35 @@ import {
   refreshToken,
 } from "./store/slices/userSlice";
 import ScrollToTop from "./components/ScrollToTop";
+import { Loader } from "lucide-react";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
-  const { isAuthenticated, user, token } = useSelector(
-    (state: RootState) => state.user
-  );
 
+  const [loading, setLoading] = React.useState(true);
   useEffect(() => {
-    if (token && !user && !isAuthenticated) {
-      // Only if we have a token but Redux has no user yet
-      dispatch(refreshToken())
-        .unwrap()
-        .then(() => {
-          dispatch(fetchCurrentUser());
-        })
-        .catch(() => {
-          dispatch(logout());
-        });
-    }
-  }, [dispatch, token, user, isAuthenticated]);
+    // App start pe hamesha refresh try karo
+    dispatch(refreshToken())
+      .unwrap()
+      .then(() => {
+        return dispatch(fetchCurrentUser());
+      })
+      .catch(() => {
+        dispatch(logout());
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [dispatch]);
+  
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader />
+      </div>
+    );
+  }
+
   return (
     <Layout>
       <ScrollToTop />
@@ -75,7 +84,10 @@ function App() {
             path="/password-generator"
             element={<PasswordGeneratorPage />}
           />
-           <Route path="/code-snippet-designer" element={<CodeSnippetDesigner />} />
+          <Route
+            path="/code-snippet-designer"
+            element={<CodeSnippetDesigner />}
+          />
           <Route path="/minifiers" element={<MinifiersPage />} />
           <Route path="/markdown-editor" element={<MarkdownEditorPage />} />
           <Route path="/privacy" element={<PrivacyPolicyPage />} />

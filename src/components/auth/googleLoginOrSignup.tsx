@@ -9,7 +9,6 @@ import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react"; // loader spinner
 
 
-
 export const GoogleButtonSignup = () => {
 
   const { error, isLoading,showLoginModal } = useSelector((state: RootState) => state.user);
@@ -28,6 +27,10 @@ export const GoogleButtonSignup = () => {
         console.log("Google login result:", result);
         if (result?.type === "user/loginWithGoogle/fulfilled") {
           toast.success("Signed up successfully");
+          
+
+    
+          
 
           // Close modal if provided
           dispatch(setShowLoginModal(false));

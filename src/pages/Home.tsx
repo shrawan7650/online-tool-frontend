@@ -151,7 +151,7 @@ export function Home() {
     name: "Online Tools Portal",
     description:
       "Professional online tools for URL encoding, Base64 conversion, JSON handling, hashing, and secure clipboard sharing",
-    url: "https://your-domain.com",
+    url: "https://www.inspitech.com",
     applicationCategory: "DeveloperApplication",
     operatingSystem: "Web Browser",
     offers: {

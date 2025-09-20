@@ -41,7 +41,7 @@ export function UserMenu() {
     if (!user?.subscriptionExpiry) return false;
     return new Date(user.subscriptionExpiry) < new Date();
   };
-  console.log("user", user);
+  
 
   if (!isAuthenticated || !user) {
     return null;
@@ -57,8 +57,8 @@ export function UserMenu() {
         >
           {user.profilePicture ? (
             <img
-              src="https://lh3.googleusercontent.com/a/ACg8ocJcxQ4GzQb_HHG3EusycqzyevsR6Mk4rYChcliTb6PqnKTJ9kYi=s96-c"
-              alt={user.name}
+              src={user?.profilePicture}
+              alt={user?.name}
               className="object-cover w-8 h-8 rounded-full"
             />
           ) : (
@@ -109,7 +109,7 @@ export function UserMenu() {
 
             <div className="p-2">
               {/* Subscription Status */}
-              <div className="px-3 py-2 mb-2">
+              {/* <div className="px-3 py-2 mb-2">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-sm text-slate-300">Subscription</span>
                   <div className="flex items-center space-x-1">
@@ -145,10 +145,10 @@ export function UserMenu() {
                     )}
                   </div>
                 )}
-              </div>
+              </div> */}
 
               {/* Menu Items */}
-              <button
+              {/* <button
                 onClick={() => {
                   setShowSubscriptionModal(true);
                   setIsOpen(false);
@@ -161,7 +161,7 @@ export function UserMenu() {
                     ? "Manage Subscription"
                     : "Upgrade to Pro"}
                 </span>
-              </button>
+              </button> */}
 
               <button
                 onClick={() => setIsOpen(false)}
@@ -185,10 +185,10 @@ export function UserMenu() {
         )}
       </div>
 
-      <SubscriptionModal
+      {/* <SubscriptionModal
         isOpen={showSubscriptionModal}
         onClose={() => setShowSubscriptionModal(false)}
-      />
+      /> */}
     </>
   );
 }

@@ -34,14 +34,14 @@ export function Layout({ children }: LayoutProps) {
                 <span className="text-[#fffff] font-bold">
                   <span className="relative inline-block">
                     i
-                    <span className="absolute -top-2f md:-top-3 left-1/2 -translate-x-1/2 text-[#25B7ED] text-base sm:text-lg md:text-2xl">
+                    <span className="absolute -top-2 md:-top-2 left-1/2 -translate-x-1/2 text-[#25B7ED] text-base sm:text-lg md:text-[25px]">
                       •
                     </span>
                   </span>
                   nsp
                   <span className="relative inline-block">
                     i
-                    <span className="absolute -top-2 left-1/2 md:-top-3 -translate-x-1/2 text-[#25B7ED] text-base sm:text-lg md:text-2xl">
+                    <span className="absolute -top-2 left-1/2 md:-top-2 -translate-x-1/2 text-[#25B7ED] text-base sm:text-lg md:text-[25px]">
                       •
                     </span>
                   </span>
