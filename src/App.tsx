@@ -48,6 +48,7 @@ function App() {
       })
       .catch(() => {
         dispatch(logoutUser());
+        
       })
       .finally(() => {
         setLoading(false);

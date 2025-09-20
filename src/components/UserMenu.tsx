@@ -30,6 +30,9 @@ export function UserMenu() {
     dispatch(logoutUser())
     toast.success("Logged out successfully");
     setIsOpen(false);
+    setTimeout(() => {
+      window.location.reload(); 
+    }, 1000); 
   };
 
   const formatExpiryDate = (dateString?: string) => {
