@@ -33,7 +33,7 @@ import {
   refreshToken,
 } from "./store/slices/userSlice";
 import ScrollToTop from "./components/ScrollToTop";
-import { Loader } from "lucide-react";
+import { Loader } from "./components/Loader";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -53,11 +53,11 @@ function App() {
         setLoading(false);
       });
   }, [dispatch]);
-  
+
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen animate-spin">
-        <Loader />
+      <div className="flex items-center justify-center h-screen">
+        <Loader className="w-12 h-12 text-blue-500 animate-spin" />
       </div>
     );
   }
