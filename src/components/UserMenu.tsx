@@ -2,9 +2,9 @@ import React, { useState, useRef, useEffect } from "react";
 import { User, LogOut, Crown, Settings, CreditCard } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../store/store";
-import { logout } from "../store/slices/userSlice";
 import { SubscriptionModal } from "./auth/SubscriptionModal";
 import toast from "react-hot-toast";
+import { logoutUser } from "../store/slices/userSlice";
 
 export function UserMenu() {
   const dispatch = useDispatch<AppDispatch>();
@@ -27,7 +27,7 @@ export function UserMenu() {
   }, []);
 
   const handleLogout = () => {
-    dispatch(logout());
+    dispatch(logoutUser())
     toast.success("Logged out successfully");
     setIsOpen(false);
   };

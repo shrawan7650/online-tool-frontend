@@ -89,16 +89,28 @@ export const refreshToken = createAsyncThunk(
     }
   },
 );
+//logut call also
+export const logoutUser = createAsyncThunk(
+  "user/logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      await axios.post(
+        `${API_BASE_URL}/api/auth/logout`,
+        {},
+        { withCredentials: true }
+      );
+      return;
+    } catch (error: any) {
+      const message = error.response?.data?.error?.message || "Logout failed";
+      return rejectWithValue(message);
+    }
+  },
+);
 
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    logout: (state) => {
-      state.user = null;
-      state.isAuthenticated = false;
-      state.error = null;
-    },
     clearError: (state) => {
       state.error = null;
     },
@@ -157,6 +169,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { logout, clearError, updateUser, setShowLoginModal } =
+export const {  clearError, updateUser, setShowLoginModal } =
   userSlice.actions;
 export default userSlice.reducer;
