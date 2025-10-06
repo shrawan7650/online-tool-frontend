@@ -34,6 +34,7 @@ import {
 } from "./store/slices/userSlice";
 import ScrollToTop from "./components/ScrollToTop";
 import { Loader } from "./components/Loader";
+import MediumExtractor from "./pages/MediumExtractor";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -94,6 +95,7 @@ function App() {
           <Route path="/privacy" element={<PrivacyPolicyPage />} />
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/disclaimer" element={<DisclaimerPage />} />
+          <Route path="/meidum" element={<MediumExtractor />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/404" element={<NotFound />} />
           <Route path="*" element={<Navigate to="/404" replace />} />

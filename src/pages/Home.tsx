@@ -18,6 +18,7 @@ import { GoogleAdSlot } from "../components/GoogleAdSlot";
 import React from "react";
 import { SEOHead } from "../components/SEOHead";
 import LogoWordmark from "../components/LogoWordmark";
+import path from "path";
 const tools = [
   {
     title: "URL Encode/Decode",
@@ -124,6 +125,13 @@ const tools = [
     path: "/code-snippet-designer",
     color: "text-pink-600",
   },
+  {
+    title: "Medium Article Reader",
+    description: "Extract and read Medium articles in a clean view",
+    icon: FileText,
+    path: "/meidum",
+    color: "text-gray-600", 
+  }
 ];
 
 const features = [
