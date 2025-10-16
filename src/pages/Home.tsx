@@ -131,7 +131,22 @@ const tools = [
     icon: FileText,
     path: "/meidum",
     color: "text-gray-600", 
+  },
+  {
+    title: "AI Chat Assistant",
+    description: "Chat with an AI assistant for coding help and ideas",
+    icon: Globe,
+    path: "/ai-asistent",
+    color: "text-teal-600",
+  },
+  {
+    title: "AI Prompt Assistant",
+    description: "Chat with an Promt assistant for coding help and ideas",
+    icon: Globe,
+    path: "/ai-prompt",
+    color: "text-teal-600",
   }
+
 ];
 
 const features = [

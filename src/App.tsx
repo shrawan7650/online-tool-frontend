@@ -35,6 +35,8 @@ import {
 import ScrollToTop from "./components/ScrollToTop";
 import { Loader } from "./components/Loader";
 import MediumExtractor from "./pages/MediumExtractor";
+import ChatAssistant from "./pages/AiAssistent";
+import PromptGenerator from "./pages/PromtGenerator";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -91,6 +93,8 @@ function App() {
             element={<CodeSnippetDesigner />}
           />
           <Route path="/minifiers" element={<MinifiersPage />} />
+          <Route path="/ai-asistent" element={<ChatAssistant />} />
+          <Route path="/ai-prompt" element={<PromptGenerator />} />
           <Route path="/markdown-editor" element={<MarkdownEditorPage />} />
           <Route path="/privacy" element={<PrivacyPolicyPage />} />
           <Route path="/terms" element={<TermsPage />} />
